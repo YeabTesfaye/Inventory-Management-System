@@ -1,13 +1,25 @@
+using AutoMapper;
 using Contracts;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace Service;
 
 public sealed class CustomerService : ICustomerService
 {
     private readonly IRepositoryManager _repositoryManager;
-    public CustomerService(IRepositoryManager repositoryManager)
+    private readonly IMapper _mapper;
+    public CustomerService(IRepositoryManager repositoryManager, IMapper mapper)
     {
         _repositoryManager = repositoryManager;
+        _mapper = mapper;
     }
+
+    public CustomerDto GetCustomer(Guid customerId)
+    {
+        var customer = _repositoryManager.Customer.GetCustomer(customerId);
+        var customerDto = _mapper.Map<CustomerDto>(customer);
+        return customerDto;
+    }
+  
 }

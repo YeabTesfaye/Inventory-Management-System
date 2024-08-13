@@ -1,3 +1,4 @@
+using AutoMapper;
 using Contracts;
 using Service.Contracts;
 
@@ -11,17 +12,17 @@ public class ServiceManager : IServiceManager
     private readonly Lazy<ProductService> _productService;
     private readonly Lazy<SupplierService> _supplierService;
 
-   public ServiceManager(IRepositoryManager repositoryManager){
+   public ServiceManager(IRepositoryManager repositoryManager, IMapper mapper){
       _customerService = new Lazy<CustomerService>(() => new 
-      CustomerService(repositoryManager));
+      CustomerService(repositoryManager,mapper));
       _itemService = new Lazy<ItemService>(() => new
-      ItemService(repositoryManager));
+      ItemService(repositoryManager,mapper));
       _orderService = new Lazy<OrderService>(() => new
-      OrderService(repositoryManager));
+      OrderService(repositoryManager,mapper));
       _productService = new Lazy<ProductService>(() => new
-      ProductService(repositoryManager));
+      ProductService(repositoryManager,mapper));
       _supplierService = new Lazy<SupplierService>(() => new
-      SupplierService(repositoryManager));
+      SupplierService(repositoryManager,mapper));
     }
 
     public ICustomerService CustomerService => _customerService.Value;

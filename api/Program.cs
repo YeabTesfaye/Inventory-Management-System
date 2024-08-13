@@ -1,5 +1,7 @@
 using api.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
+using Service;
+using Service.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,10 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-builder.Services.ConfigureCors();
+builder.Services.AddControllers()
+.AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+ builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

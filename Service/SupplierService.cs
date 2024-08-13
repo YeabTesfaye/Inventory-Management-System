@@ -1,17 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Contracts;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
-namespace Service
+namespace Service;
+
+public class SupplierService  : ISupplierService
 {
-    public class SupplierService  : ISupplierService
+    private readonly IRepositoryManager _repositoryManager;
+    private readonly IMapper _mapper;
+    public SupplierService(IRepositoryManager repositoryManager, IMapper mapper){
+        _repositoryManager = repositoryManager;
+        _mapper = mapper;
+     }
+
+    public IEnumerable<SupplierDto> GetSuppliers()
     {
-        private readonly IRepositoryManager _repositoryManager;
-        public SupplierService(IRepositoryManager repositoryManager){
-            _repositoryManager = repositoryManager;
-         }
+        var suppliers = _repositoryManager.Supplier.GetSuppliers(trackChanges:false);
+        var supplierDto = _mapper.Map<IEnumerable<SupplierDto>>(suppliers);
+        return supplierDto;
     }
 }

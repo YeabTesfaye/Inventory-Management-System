@@ -13,3 +13,6 @@ C:\Users\yeabiseraT\Desktop\Projects\Inventory Management System\Repository\obj\
 C:\Users\yeabiseraT\Desktop\Projects\Inventory Management System\Repository\obj\Debug\net8.0\refint\Repository.dll
 C:\Users\yeabiseraT\Desktop\Projects\Inventory Management System\Repository\obj\Debug\net8.0\Repository.pdb
 C:\Users\yeabiseraT\Desktop\Projects\Inventory Management System\Repository\obj\Debug\net8.0\ref\Repository.dll
+C:\Users\yeabiseraT\Desktop\Projects\Inventory Management System\Repository\bin\Debug\net8.0\Contracts.dll
+C:\Users\yeabiseraT\Desktop\Projects\Inventory Management System\Repository\bin\Debug\net8.0\Contracts.pdb
+C:\Users\yeabiseraT\Desktop\Projects\Inventory Management System\Repository\obj\Debug\net8.0\Repository.sourcelink.json
