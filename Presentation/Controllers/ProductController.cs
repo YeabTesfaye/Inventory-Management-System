@@ -20,7 +20,7 @@ public class ProductController : ControllerBase
     }
     [HttpGet("{productId}")]
 
-    public IActionResult GetProduct([FromRoute]Guid productId)
+    public IActionResult GetProduct([FromRoute] Guid productId)
     {
         var product = _serviceManager.ProductService.GetProduct(productId);
         return Ok(product);

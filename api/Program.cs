@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddControllers()
 .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
- builder.Services.AddScoped<IServiceManager, ServiceManager>();
+builder.Services.AddScoped<IServiceManager, ServiceManager>();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
@@ -26,14 +26,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else 
-     app.UseHsts();
-
+else
+    app.UseHsts();
+app.ConfigureExceptionHandler();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-ForwardedHeaders = ForwardedHeaders.All
+    ForwardedHeaders = ForwardedHeaders.All
 });
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
