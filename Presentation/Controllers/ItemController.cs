@@ -19,9 +19,9 @@ public class ItemController : ControllerBase
     }
 
     [HttpGet("product/{productId:guid}")]
-    public IActionResult GetItemsByProductId([FromRoute] Guid productId)
+    public IActionResult GetItemsByProductId([FromRoute] Guid orderId, [FromRoute] Guid productId)
     {
-        var items = _service.ItemService.GetItemsByProductId(productId);
+        var items = _service.ItemService.GetItemsByProductId(orderId, productId);
         return Ok(items);
     }
 
@@ -30,11 +30,9 @@ public class ItemController : ControllerBase
     {
         if (item == null)
             return BadRequest("ItemForCreationDto object is null");
-
-        // Ensure the item object includes the orderId
         item.OrderId = orderId;
+        var createItem = _service.ItemService.CreateItem(orderId, item);
 
-        var createItem = _service.ItemService.CreateItem(item);
         return CreatedAtAction(
             nameof(GetItemsOfOrder),
             new { orderId },

@@ -5,7 +5,7 @@ namespace Service.Contracts;
 public interface IItemService
 {
     IEnumerable<ItemDto> GetItemsOfOrder(Guid orderId, bool trackChanges);
-    ItemDto? GetItemsByProductId(Guid productId);
-    ItemDto CreateItem(ItemForCreationDto item);
+    ItemDto? GetItemsByProductId(Guid orderId,Guid productId);
+    ItemDto CreateItem(Guid orderId, ItemForCreationDto item);
 
 }

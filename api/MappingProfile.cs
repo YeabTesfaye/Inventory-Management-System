@@ -29,6 +29,9 @@ public class MappingProfile : Profile
         CreateMap<CustomerForCreationDto,Customer>();
         CreateMap<Item,ItemDto>();
         CreateMap<ItemForCreationDto,Item>();
+        CreateMap<Order,OrderDto>();
+        CreateMap<OrderForCreationDto, Order>();
+
     }
 
 

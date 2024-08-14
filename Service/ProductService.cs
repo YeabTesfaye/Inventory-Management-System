@@ -17,8 +17,9 @@ public sealed class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public ProductDto CreateProduct(ProductForCreationDto product)
+    public ProductDto CreateProduct(ProductForCreationDto product, Guid supplierId)
     {
+        CheckIfSupplierExists(supplierId, trackChanges: false);
         var productEntity = _mapper.Map<Product>(product);
         _repositoryManager.Product.CreateProduct(productEntity);
         _repositoryManager.Save();
@@ -27,9 +28,10 @@ public sealed class ProductService : IProductService
 
     }
 
-    public ProductDto? GetProduct(Guid productId, bool trackChanges)
+    public ProductDto? GetProduct(Guid productId, Guid supplierId, bool trackChanges)
     {
-        var product = _repositoryManager.Product.GetProduct(productId,trackChanges)
+        CheckIfSupplierExists(supplierId, trackChanges: false);
+        var product = _repositoryManager.Product.GetProduct(productId, trackChanges)
          ?? throw new ProductNotFoundException(productId);
         var productDto = _mapper.Map<ProductDto>(product);
         return productDto;
@@ -41,5 +43,10 @@ public sealed class ProductService : IProductService
         var products = _repositoryManager.Product.GetProducts(supplierId, trackChanges);
         var producsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
         return producsDto;
+    }
+    private void CheckIfSupplierExists(Guid supplierId, bool trackChanges)
+    {
+        _ = _repositoryManager.Supplier.GetSupplierById(supplierId, trackChanges)
+        ?? throw new SupplierNotFoundException(supplierId);
     }
 }

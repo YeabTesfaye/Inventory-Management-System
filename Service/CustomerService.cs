@@ -27,9 +27,9 @@ public sealed class CustomerService : ICustomerService
     }
      
 
-    public CustomerDto? GetCustomer(Guid customerId)
+    public CustomerDto? GetCustomer(Guid customerId, bool trackChanges)
     {
-        var customer = _repositoryManager.Customer.GetCustomer(customerId)
+        var customer = _repositoryManager.Customer.GetCustomer(customerId,trackChanges)
          ?? throw new CustomerNotFoundException(customerId);
         var customerDto = _mapper.Map<CustomerDto>(customer);
         return customerDto;

@@ -4,6 +4,6 @@ namespace Service.Contracts;
 
 public interface ICustomerService
 {
-    CustomerDto? GetCustomer(Guid customerId);
+    CustomerDto? GetCustomer(Guid customerId,bool trackChanges);
     CustomerDto CreateCustomer(CustomerForCreationDto customer);
 }

@@ -16,7 +16,7 @@ public class CustomerController : ControllerBase
     public IActionResult GetCustomer([FromRoute] Guid customerId)
     {
 
-        var customer = _serviceManager.CustomerService.GetCustomer(customerId);
+        var customer = _serviceManager.CustomerService.GetCustomer(customerId, trackChanges:false);
         return Ok(customer);
     }
     [HttpPost]

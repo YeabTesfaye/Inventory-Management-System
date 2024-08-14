@@ -12,10 +12,10 @@ public class CustomerRepository : RepositoryBase<Customer>, ICustomerRepository
     public void CreateCustomer(Customer customer)
      => Create(customer);
 
-    public Customer? GetCustomer(Guid customerId)
+    public Customer? GetCustomer(Guid customerId, bool trackChanges)
     {
         var customer = FindByCondition(c => c.CustomerId.Equals(customerId),
-        trackChanges: false)
+        trackChanges)
         .SingleOrDefault();
        
         return customer;
