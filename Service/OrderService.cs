@@ -1,6 +1,7 @@
 using AutoMapper;
 using Contracts;
 using Entities.Exceptions;
+using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -14,6 +15,15 @@ public sealed class OrderService : IOrderService
     {
         _repositoryManager = repositoryManager;
         _mapper = mapper;
+    }
+
+    public OrderDto CreateOrder(OrderForCreationDto order)
+    {
+        var createEntity = _mapper.Map<Order>(order);
+        _repositoryManager.Order.CreateOrder(createEntity);
+        _repositoryManager.Save();
+        var orderToReturn = _mapper.Map<OrderDto>(createEntity);
+        return orderToReturn;
     }
 
     public OrderDto? GetOrderById(Guid orderId, bool trackChanges)

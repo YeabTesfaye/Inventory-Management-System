@@ -9,6 +9,9 @@ public class CustomerRepository : RepositoryBase<Customer>, ICustomerRepository
     {
     }
 
+    public void CreateCustomer(Customer customer)
+     => Create(customer);
+
     public Customer? GetCustomer(Guid customerId)
     {
         var customer = FindByCondition(c => c.CustomerId.Equals(customerId),

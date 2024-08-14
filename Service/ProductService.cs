@@ -1,6 +1,7 @@
 using AutoMapper;
 using Contracts;
 using Entities.Exceptions;
+using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -14,6 +15,16 @@ public sealed class ProductService : IProductService
     {
         _repositoryManager = repositoryManager;
         _mapper = mapper;
+    }
+
+    public ProductDto CreateProduct(ProductForCreationDto product)
+    {
+        var productEntity = _mapper.Map<Product>(product);
+        _repositoryManager.Product.CreateProduct(productEntity);
+        _repositoryManager.Save();
+        var productToReturn = _mapper.Map<ProductDto>(productEntity);
+        return productToReturn;
+
     }
 
     public ProductDto? GetProduct(Guid productId, bool trackChanges)

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Contracts;
 using Entities.Exceptions;
+using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -16,10 +17,10 @@ public sealed class ItemService : IItemService
         _mapper = mapper;
     }
 
-    public IEnumerable<ItemDto> GetItemsOfOrder(Guid orderId,bool trackChanges)
+    public IEnumerable<ItemDto> GetItemsOfOrder(Guid orderId, bool trackChanges)
     {
         var items =
-        _repositoryManager.Item.GetItemsOfOrder(orderId,trackChanges);
+        _repositoryManager.Item.GetItemsOfOrder(orderId, trackChanges);
         var itemsDto = _mapper.Map<IEnumerable<ItemDto>>(items);
         return itemsDto;
     }
@@ -32,4 +33,14 @@ public sealed class ItemService : IItemService
         var itemsDto = _mapper.Map<ItemDto>(items);
         return itemsDto;
     }
+
+    public ItemDto CreateItem(ItemForCreationDto item)
+    {
+        var itemEntity = _mapper.Map<Item>(item);
+        _repositoryManager.Item.CreateItem(itemEntity);
+        _repositoryManager.Save();
+        var itemToReturn = _mapper.Map<ItemDto>(itemEntity);
+        return itemToReturn;
+    }
+
 }

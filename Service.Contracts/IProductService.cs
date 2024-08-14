@@ -6,4 +6,5 @@ public interface IProductService
 {
    public IEnumerable<ProductDto> GetProducts(Guid supplierId, bool trackChanges);
     public ProductDto? GetProduct(Guid productId, bool trackChanges);
+    public ProductDto CreateProduct(ProductForCreationDto product);
 }

@@ -20,7 +20,5 @@ public class ItemRepository : RepositoryBase<Item>, IItemRepository
        trackChanges: false)
        .FirstOrDefault();
 
-
-
-
+    public void CreateItem(Item item) => Create(item);
 }

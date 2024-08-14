@@ -5,4 +5,5 @@ namespace Contracts;
 public interface ICustomerRepository
 {
     Customer? GetCustomer(Guid customerId);
+    void CreateCustomer(Customer customer);
 }

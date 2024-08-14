@@ -21,7 +21,14 @@ public class MappingProfile : Profile
         opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
         CreateMap<Order, OrderDto>();
         CreateMap<Product, ProductDto>();
-
+        CreateMap<Supplier,SupplierDto>();
+        CreateMap<SupplierForCreationDto,Supplier>();
+        CreateMap<Product,ProductDto>();
+        CreateMap<ProductForCreationDto,Product>();
+        CreateMap<Customer,CustomerDto>();
+        CreateMap<CustomerForCreationDto,Customer>();
+        CreateMap<Item,ItemDto>();
+        CreateMap<ItemForCreationDto,Item>();
     }
 
 

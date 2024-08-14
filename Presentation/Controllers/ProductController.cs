@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace Presentation.Controllers;
 
@@ -24,6 +25,15 @@ public class ProductController : ControllerBase
     {
         var product = _serviceManager.ProductService.GetProduct(productId, trackChanges: false);
         return Ok(product);
+    }
+    [HttpPost]
+    public IActionResult CreateProduct([FromBody] ProductForCreationDto product)
+    {
+        
+        if (product == null)
+            return BadRequest("ProductForCreationDto object is null");
+        var createProduct = _serviceManager.ProductService.CreateProduct(product);
+        return CreatedAtAction(nameof(GetProduct), new { productId = createProduct.ProductId, supplierId = product.SupplierId }, createProduct);
     }
 
 }

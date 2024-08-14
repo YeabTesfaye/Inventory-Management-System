@@ -21,4 +21,6 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
         return product;
     }
 
+    public void CreateProduct(Product product)
+     => Create(product);
 }

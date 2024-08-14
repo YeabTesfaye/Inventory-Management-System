@@ -6,6 +6,6 @@ public interface IItemService
 {
     IEnumerable<ItemDto> GetItemsOfOrder(Guid orderId, bool trackChanges);
     ItemDto? GetItemsByProductId(Guid productId);
-
+    ItemDto CreateItem(ItemForCreationDto item);
 
 }

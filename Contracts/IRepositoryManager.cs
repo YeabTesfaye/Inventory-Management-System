@@ -7,4 +7,5 @@ namespace Contracts;
      IOrderRepository Order { get;  }
      IProductRepository Product { get;  }
      ISupplierRepository Supplier { get;  }
+     void Save();
 }

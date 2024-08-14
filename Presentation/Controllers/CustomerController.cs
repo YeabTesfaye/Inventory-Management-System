@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace Presentation.Controllers;
 
@@ -14,9 +15,16 @@ public class CustomerController : ControllerBase
     [HttpGet("{customerId:guid}")]
     public IActionResult GetCustomer([FromRoute] Guid customerId)
     {
-        
+
         var customer = _serviceManager.CustomerService.GetCustomer(customerId);
         return Ok(customer);
-
+    }
+    [HttpPost]
+    public IActionResult CreateCustomer([FromBody] CustomerForCreationDto customer)
+    {
+        if (customer == null)
+            return BadRequest("CustomerForCreationDto object is null");
+        var createCustomer = _serviceManager.CustomerService.CreateCustomer(customer);
+        return CreatedAtAction(nameof(GetCustomer), new { productId = createCustomer.CustomerId, customerId = createCustomer.CustomerId }, createCustomer);
     }
 }

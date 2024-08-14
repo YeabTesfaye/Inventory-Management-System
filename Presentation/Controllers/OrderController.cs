@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
+using Shared.DataTransferObjects;
 
 namespace Presentation.Controllers;
 [Route("api/customers/{customerId}/orders")]
@@ -22,6 +23,14 @@ public class OrderController : ControllerBase
     {
         var order = _serviceManager.OrderService.GetOrderById(orderId,  trackChanges: false);
         return Ok(order);
+    }
+    [HttpPost]
+    public IActionResult CreateOrder([FromBody] OrderForCreationDto order){
+        if (order == null)
+            return BadRequest("OrderForCreationDto object is null");
+
+        var createOrder = _serviceManager.OrderService.CreateOrder(order);
+        return CreatedAtAction(nameof(GetOrderById), new { orderId = createOrder.OrderId }, createOrder);
     }
 
 }
