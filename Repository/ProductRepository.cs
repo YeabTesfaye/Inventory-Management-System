@@ -1,4 +1,5 @@
 using Contracts;
+using Entities.Exceptions;
 using Entities.Models;
 
 namespace Repository;
@@ -9,9 +10,15 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
     {
     }
 
-    public IEnumerable<Product> GetAllProducts(bool trackChanges)
-     => [.. FindByCondition(o => true, trackChanges).OrderBy(p => p.Name)];
+    public IEnumerable<Product> GetProducts(Guid suppierId, bool trackChanges)
+     => [.. FindByCondition(p => p.SupplierId == suppierId, trackChanges).OrderBy(p => p.Name)];
 
-    public Product GetProduct(Guid productId)
-     => FindByCondition(p => p.ProductId == productId, trackChanges: false).FirstOrDefault();
+    public Product? GetProduct(Guid productId,bool trackChanges)
+    {
+        var product = FindByCondition(p => p.ProductId == productId,
+         trackChanges).FirstOrDefault()
+         ?? throw new ProductNotFoundException(productId);
+        return product;
+    }
+
 }

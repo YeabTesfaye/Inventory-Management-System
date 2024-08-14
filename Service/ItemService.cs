@@ -1,6 +1,6 @@
 using AutoMapper;
 using Contracts;
-using Entities.Models;
+using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -16,34 +16,20 @@ public sealed class ItemService : IItemService
         _mapper = mapper;
     }
 
-    public IEnumerable<ItemDto> GetAllItems(bool trackChanges)
+    public IEnumerable<ItemDto> GetItemsOfOrder(Guid orderId,bool trackChanges)
     {
-        try
-        {
-            var items =
-            _repositoryManager.Item.GetAllItems(trackChanges);
-             var itemsDto = _mapper.Map<IEnumerable<ItemDto>>(items);
-             return itemsDto;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-            throw;
-        }
-
-    }
-
-    public IEnumerable<ItemDto> GetItemsByOrder(Guid orderId)
-    {
-      var items = _repositoryManager.Item.GetItemsByOrder(orderId);
-      var itemsDto = _mapper.Map<IEnumerable<ItemDto>>(items);
-      return itemsDto;
-    }
-
-    public IEnumerable<ItemDto> GetItemsByProduct(Guid productId)
-    {
-        var items = _repositoryManager.Item.GetItemsByProduct(productId);
+        var items =
+        _repositoryManager.Item.GetItemsOfOrder(orderId,trackChanges);
         var itemsDto = _mapper.Map<IEnumerable<ItemDto>>(items);
+        return itemsDto;
+    }
+
+
+    public ItemDto? GetItemsByProductId(Guid productId)
+    {
+        var items = _repositoryManager.Item.GetItemsByProductId(productId)
+        ?? throw new ProductNotFoundException(productId);
+        var itemsDto = _mapper.Map<ItemDto>(items);
         return itemsDto;
     }
 }

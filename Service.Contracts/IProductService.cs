@@ -4,6 +4,6 @@ namespace Service.Contracts;
 
 public interface IProductService
 {
-   public IEnumerable<ProductDto> GetProducts();
-    public ProductDto GetProduct(Guid productId);
+   public IEnumerable<ProductDto> GetProducts(Guid supplierId, bool trackChanges);
+    public ProductDto? GetProduct(Guid productId, bool trackChanges);
 }

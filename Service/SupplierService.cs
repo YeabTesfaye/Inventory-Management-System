@@ -14,9 +14,9 @@ public class SupplierService  : ISupplierService
         _mapper = mapper;
      }
 
-    public IEnumerable<SupplierDto> GetSuppliers()
+    public IEnumerable<SupplierDto> GetSuppliers(bool trackChanges)
     {
-        var suppliers = _repositoryManager.Supplier.GetSuppliers(trackChanges:false);
+        var suppliers = _repositoryManager.Supplier.GetSuppliers(trackChanges);
         var supplierDto = _mapper.Map<IEnumerable<SupplierDto>>(suppliers);
         return supplierDto;
     }

@@ -4,5 +4,5 @@ namespace Service.Contracts;
 
 public interface ISupplierService
 {
-    public IEnumerable<SupplierDto> GetSuppliers();
+    public IEnumerable<SupplierDto> GetSuppliers(bool trackChanges);
 }

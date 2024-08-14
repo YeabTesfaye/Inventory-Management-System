@@ -9,11 +9,11 @@ public class CustomerRepository : RepositoryBase<Customer>, ICustomerRepository
     {
     }
 
-    public Customer GetCustomer(Guid customerId)
+    public Customer? GetCustomer(Guid customerId)
     {
-        var customer = FindByCondition(c => c.CustomerId == customerId,
+        var customer = FindByCondition(c => c.CustomerId.Equals(customerId),
         trackChanges: false)
-        .FirstOrDefault();
+        .SingleOrDefault();
        
         return customer;
     }

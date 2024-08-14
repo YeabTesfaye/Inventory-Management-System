@@ -11,7 +11,7 @@ public class CustomerController : ControllerBase
     public CustomerController(IServiceManager serviceManager)
      => _serviceManager = serviceManager;
 
-    [HttpGet("{customerId}")]
+    [HttpGet("{customerId:guid}")]
     public IActionResult GetCustomer([FromRoute] Guid customerId)
     {
         

@@ -9,17 +9,18 @@ public class ItemRepository : RepositoryBase<Item>, IItemRepository
     {
     }
 
-    public IEnumerable<Item> GetAllItems(bool trackChanges)
-    => [.. FindAll(trackChanges).OrderBy(i => i.Name)];
+    public IEnumerable<Item> GetItemsOfOrder(Guid orderId, bool trackChanges)
+    => FindByCondition(item => item.OrderId == orderId, trackChanges)
+        .OrderBy(item => item.Name);
 
-    public IEnumerable<Item> GetItemsByProduct(Guid productId)
-    => [.. FindByCondition(i => i.ProductId == productId,
+
+
+    public Item? GetItemsByProductId(Guid productId)
+    => FindByCondition(i => i.ProductId == productId,
        trackChanges: false)
-       .OrderBy(i => i.Name)];
+       .FirstOrDefault();
 
-    public IEnumerable<Item> GetItemsByOrder(Guid orderId)
-    => [.. FindByCondition( i => i.OrderId == orderId,
-    trackChanges:false)
-    .OrderBy(i => i.Name)];
+
+
 
 }

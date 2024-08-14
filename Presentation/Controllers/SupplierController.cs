@@ -13,7 +13,7 @@ public class SupplierController : ControllerBase
     }
     [HttpGet]
     public IActionResult GetSuppliers(){
-        var suppliers = _serviceManager.SupplierService.GetSuppliers();
+        var suppliers = _serviceManager.SupplierService.GetSuppliers(trackChanges:false);
         return Ok(suppliers);
     }
 }

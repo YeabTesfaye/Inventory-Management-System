@@ -1,5 +1,6 @@
 using AutoMapper;
 using Contracts;
+using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -15,16 +16,17 @@ public sealed class OrderService : IOrderService
         _mapper = mapper;
     }
 
-    public OrderDto GetOrder(Guid orderId)
+    public OrderDto? GetOrderById(Guid orderId, bool trackChanges)
     {
-        var order = _repositoryManager.Order.GetOrder(orderId);
+        var order = _repositoryManager.Order.GetOrderById(orderId,trackChanges)
+         ?? throw new OrderNotFoundException(orderId);
         var orderDto = _mapper.Map<OrderDto>(order);
         return orderDto;
     }
 
-    public IEnumerable<OrderDto> GetOrders()
+    public IEnumerable<OrderDto> GetOrdersOfCustomer(Guid customerId, bool trackChanges)
     {
-        var orders = _repositoryManager.Order.GetOrders(trackChanges: false);
+        var orders = _repositoryManager.Order.GetOrdersOfCustomer(customerId, trackChanges);
         var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
         return ordersDto;
     }

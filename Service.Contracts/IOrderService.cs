@@ -4,6 +4,6 @@ namespace Service.Contracts;
 
 public interface IOrderService
 {
-    public IEnumerable<OrderDto> GetOrders();
-    public OrderDto GetOrder(Guid orderId);
+    public IEnumerable<OrderDto> GetOrdersOfCustomer(Guid customerId, bool trackChanges);
+    public OrderDto? GetOrderById(Guid orderId,bool trackChanges);
 }

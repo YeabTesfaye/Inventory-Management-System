@@ -4,7 +4,7 @@ namespace Contracts;
 
 public interface IItemRepository
 {
-    IEnumerable<Item> GetAllItems(bool trackChanges);
-    IEnumerable<Item> GetItemsByProduct(Guid productId);
-    IEnumerable<Item> GetItemsByOrder(Guid orderId);
+    IEnumerable<Item> GetItemsOfOrder(Guid orderId, bool trackChanges);
+    Item? GetItemsByProductId(Guid productId);
+    
 }

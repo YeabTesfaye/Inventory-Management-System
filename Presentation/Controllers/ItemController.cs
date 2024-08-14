@@ -2,36 +2,25 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 
 namespace Presentation.Controllers;
-[Route("api/item")]
+[Route("api/orders/{orderId}/items")]
 [ApiController]
 public class ItemController : ControllerBase
 {
     private readonly IServiceManager _service;
     public ItemController(IServiceManager service) => _service = service;
     [HttpGet]
-    public IActionResult GetItems()
+    public IActionResult GetItemsOfOrder(Guid orderId)
     {
-        try
-        {
-            var items = _service.ItemService.GetAllItems(trackChanges: false);
-            return Ok(items);
-        }
-        catch
-        {
-            return StatusCode(500, "Internal server error");
-        }
+        var items = _service.ItemService.GetItemsOfOrder(orderId, trackChanges: false);
+        return Ok(items);
 
     }
-    [HttpGet("product/{productId}")]
-    public IActionResult GetItemsByProduct([FromRoute]Guid productId)
+    [HttpGet("product/{productId:guid}")]
+    public IActionResult GetItemsByProductId([FromRoute] Guid productId)
     {
-       
-        var items = _service.ItemService.GetItemsByProduct(productId);
+
+        var items = _service.ItemService.GetItemsByProductId(productId);
         return Ok(items);
     }
-    [HttpGet("order/{orderId}")]
-    public IActionResult GetItemsByOrder([FromRoute]Guid orderId){
-        var items = _service.ItemService.GetItemsByOrder(orderId);
-        return Ok(items);
-    }
+    
 }

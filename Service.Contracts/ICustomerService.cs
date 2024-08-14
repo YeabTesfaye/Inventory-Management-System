@@ -4,5 +4,5 @@ namespace Service.Contracts;
 
 public interface ICustomerService
 {
-    CustomerDto GetCustomer(Guid customerId);
+    CustomerDto? GetCustomer(Guid customerId);
 }

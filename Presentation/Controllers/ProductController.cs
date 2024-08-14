@@ -3,7 +3,7 @@ using Service.Contracts;
 
 namespace Presentation.Controllers;
 
-[Route("api/product")]
+[Route("api/suppliers/{supplierId}/products")]
 [ApiController]
 public class ProductController : ControllerBase
 {
@@ -13,16 +13,16 @@ public class ProductController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
-    public IActionResult GetProducts()
+    public IActionResult GetProducts(Guid supplierId)
     {
-        var products = _serviceManager.ProductService.GetProducts();
+        var products = _serviceManager.ProductService.GetProducts(supplierId, trackChanges: false);
         return Ok(products);
     }
-    [HttpGet("{productId}")]
+    [HttpGet("{productId:guid}")]
 
     public IActionResult GetProduct([FromRoute] Guid productId)
     {
-        var product = _serviceManager.ProductService.GetProduct(productId);
+        var product = _serviceManager.ProductService.GetProduct(productId, trackChanges: false);
         return Ok(product);
     }
 

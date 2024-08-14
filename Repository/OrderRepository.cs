@@ -9,9 +9,9 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
     {
     }
 
-    public Order GetOrder(Guid orderId)
-    => FindByCondition(o => o.OrderId == orderId,trackChanges:false).FirstOrDefault();
+    public Order? GetOrderById(Guid orderId,bool trackChanges)
+    => FindByCondition(o => o.OrderId == orderId, trackChanges).FirstOrDefault();
 
-    public IEnumerable<Order> GetOrders(bool trackChanges)
-    => [.. FindByCondition(o => true, trackChanges).OrderBy(c => c.OrderDate)];
+    public IEnumerable<Order> GetOrdersOfCustomer(Guid customerId, bool trackChanges)
+    => [.. FindByCondition(o => o.CustomerId == customerId, trackChanges).OrderBy(o => o.OrderDate)];
 }

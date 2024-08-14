@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 
 namespace Presentation.Controllers;
-[Route("api/order")]
+[Route("api/customers/{customerId}/orders")]
 [ApiController]
 public class OrderController : ControllerBase
 {
@@ -12,15 +12,15 @@ public class OrderController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
-    public IActionResult GetOrders()
+    public IActionResult GetOrdersOfCustomer(Guid customerId)
     {
-        var orders = _serviceManager.OrderService.GetOrders();
+        var orders = _serviceManager.OrderService.GetOrdersOfCustomer(customerId,trackChanges: false);
         return Ok(orders);
     }
-    [HttpGet("{orderId}")]
-    public IActionResult GetOrder([FromRoute]Guid orderId){
-        
-        var order = _serviceManager.OrderService.GetOrder(orderId);
+    [HttpGet("{orderId:guid}")]
+    public IActionResult GetOrderById([FromRoute] Guid orderId)
+    {
+        var order = _serviceManager.OrderService.GetOrderById(orderId,  trackChanges: false);
         return Ok(order);
     }
 

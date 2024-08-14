@@ -1,5 +1,6 @@
 using AutoMapper;
 using Contracts;
+using Entities.Exceptions;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -15,11 +16,12 @@ public sealed class CustomerService : ICustomerService
         _mapper = mapper;
     }
 
-    public CustomerDto GetCustomer(Guid customerId)
+    public CustomerDto? GetCustomer(Guid customerId)
     {
-        var customer = _repositoryManager.Customer.GetCustomer(customerId);
+        var customer = _repositoryManager.Customer.GetCustomer(customerId)
+         ?? throw new CustomerNotFoundException(customerId);
         var customerDto = _mapper.Map<CustomerDto>(customer);
         return customerDto;
     }
-  
+
 }
