@@ -19,7 +19,20 @@ public class ItemRepository : RepositoryBase<Item>, IItemRepository
     public async Task<Item?> GetItemsByProductIdAsync(Guid productId)
     => await FindByCondition(i => i.ProductId == productId,
        trackChanges: false)
-       .SingleOrDefaultAsync();
+       .FirstOrDefaultAsync
+       ();
 
     public void CreateItem(Item item) => Create(item);
+
+    public void DeleteItem(Item item) => Delete(item);
+
+    public async Task<Item?> GetItemByItemIdAsync(Guid itemId)
+    {
+        var item = await FindByCondition(item => item.ItemId == itemId,trackChanges:false)
+        .SingleOrDefaultAsync();
+        return item;
+    }
+
+    
+     
 }

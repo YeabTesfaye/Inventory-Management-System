@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
@@ -33,6 +34,12 @@ public class OrderController : ControllerBase
 
         var createOrder = await _serviceManager.OrderService.CreateOrderAsync(order, customerId);
         return CreatedAtAction(nameof(GetOrderById), new { orderId = createOrder.OrderId, customerId }, createOrder);
+    }
+    [HttpDelete("{orderId:guid}")]
+    public async Task<IActionResult> DeleteOrderByOrderId([FromRoute] Guid orderId)
+    {
+        await _serviceManager.OrderService.DeleteOrderAsync(orderId);
+        return NoContent();
     }
 
 

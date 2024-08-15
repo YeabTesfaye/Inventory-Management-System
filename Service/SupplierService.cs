@@ -30,6 +30,7 @@ public class SupplierService : ISupplierService
     {
         var supplier = await GetSupplierAndCheckIfItExists(supplierId, trackChanges: false);
         _repositoryManager.Supplier.DeleteSupplier(supplier);
+        await _repositoryManager.SaveAsync();
 
     }
 

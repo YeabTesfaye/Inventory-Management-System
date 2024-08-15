@@ -19,12 +19,19 @@ public sealed class OrderService : IOrderService
 
     public async Task<OrderDto> CreateOrderAsync(OrderForCreationDto order, Guid customerId)
     {
-       await CheckIfCustomerExists(customerId, trackChanges: false);
+        await CheckIfCustomerExists(customerId, trackChanges: false);
         var createEntity = _mapper.Map<Order>(order);
         _repositoryManager.Order.CreateOrder(createEntity);
         await _repositoryManager.SaveAsync();
         var orderToReturn = _mapper.Map<OrderDto>(createEntity);
         return orderToReturn;
+    }
+
+    public async Task DeleteOrderAsync(Guid orderId)
+    {
+        var order = await CheckIfOrderExistAndReturn(orderId, trackChanges: false);
+        _repositoryManager.Order.DeleteOrder(order);
+        await _repositoryManager.SaveAsync();
     }
 
     public async Task<OrderDto?> GetOrderByIdAsync(Guid orderId, Guid customerId, bool trackChanges)
@@ -46,6 +53,12 @@ public sealed class OrderService : IOrderService
     {
         _ = await _repositoryManager.Customer.GetCustomerAsync(customerId, trackChanges)
         ?? throw new CustomerNotFoundException(customerId);
+    }
+    private async Task<Order> CheckIfOrderExistAndReturn(Guid orderId, bool trackChanges)
+    {
+        var order = await _repositoryManager.Order.GetOrderByIdAsync(orderId, trackChanges)
+        ?? throw new OrderNotFoundException(orderId);
+        return order;
     }
 
 

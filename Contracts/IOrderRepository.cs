@@ -9,5 +9,6 @@ public interface IOrderRepository
     Task<Order?> GetOrderByIdAsync(Guid orderId, bool trackChanges);
 
     void CreateOrder(Order order);
+    void DeleteOrder(Order order);
 
 }

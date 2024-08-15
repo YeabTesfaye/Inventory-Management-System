@@ -24,4 +24,6 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
 
     public void CreateProduct(Product product)
      => Create(product);
+
+    public void DeleteProduct(Product product) => Delete(product);
 }

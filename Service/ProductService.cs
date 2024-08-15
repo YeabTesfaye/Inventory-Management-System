@@ -19,13 +19,21 @@ public sealed class ProductService : IProductService
 
     public async Task<ProductDto> CreateProductAsync(ProductForCreationDto product, Guid supplierId)
     {
-       await CheckIfSupplierExists(supplierId, trackChanges: false);
+        await CheckIfSupplierExists(supplierId, trackChanges: false);
         var productEntity = _mapper.Map<Product>(product);
         _repositoryManager.Product.CreateProduct(productEntity);
-       await _repositoryManager.SaveAsync();
+        await _repositoryManager.SaveAsync();
         var productToReturn = _mapper.Map<ProductDto>(productEntity);
         return productToReturn;
 
+    }
+
+    public async Task DeleteProductAsync(Guid productId, Guid supplierId)
+    {
+
+        var product = await CheckIfProductExistsAndReturn(productId, trackChanges: false);
+        _repositoryManager.Product.DeleteProduct(product);
+       await _repositoryManager.SaveAsync();
     }
 
     public async Task<ProductDto?> GetProductAsync(Guid productId, Guid supplierId, bool trackChanges)
@@ -40,14 +48,20 @@ public sealed class ProductService : IProductService
 
     public async Task<IEnumerable<ProductDto>> GetProductsAsync(Guid supplierId, bool trackChanges)
     {
-        await CheckIfSupplierExists(supplierId,trackChanges:false);
+        await CheckIfSupplierExists(supplierId, trackChanges: false);
         var products = await _repositoryManager.Product.GetProductsAsync(supplierId, trackChanges);
         var producsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
         return producsDto;
     }
     private async Task CheckIfSupplierExists(Guid supplierId, bool trackChanges)
     {
-        _ =await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges)
+        _ = await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges)
         ?? throw new SupplierNotFoundException(supplierId);
+    }
+    private async Task<Product> CheckIfProductExistsAndReturn(Guid productId, bool trackChanges)
+    {
+        var product = await _repositoryManager.Product.GetProductAsync(productId, trackChanges)
+          ?? throw new ProductNotFoundException(productId);
+        return product;
     }
 }

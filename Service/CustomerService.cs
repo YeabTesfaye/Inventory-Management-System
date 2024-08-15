@@ -28,8 +28,9 @@ public sealed class CustomerService : ICustomerService
 
     public async Task DeleteCustomerAsync(Guid id, bool trackChanges)
     {
-       await GetCustomerAndCheckIfItExists(id, trackChanges: false);
-        throw new NotImplementedException();
+        var customer = await GetCustomerAndCheckIfItExists(id, trackChanges: false);
+        _repositoryManager.Customer.DeleteCustomer(customer);
+        await _repositoryManager.SaveAsync();
     }
 
     public async Task<CustomerDto?> GetCustomerAsync(Guid customerId, bool trackChanges)

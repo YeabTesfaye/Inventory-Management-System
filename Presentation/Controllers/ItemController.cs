@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -15,6 +16,12 @@ public class ItemController : ControllerBase
     public async Task<IActionResult> GetItemsOfOrder(Guid orderId)
     {
         var items = await _service.ItemService.GetItemsOfOrderAsync(orderId, trackChanges: false);
+        return Ok(items);
+    }
+    [HttpGet("{itemId:guid}")]
+    public async Task<IActionResult> GetItemsByItemId([FromRoute] Guid itemId)
+    {
+        var items = await _service.ItemService.GetItemByItemIdAsync(itemId);
         return Ok(items);
     }
 
@@ -38,5 +45,12 @@ public class ItemController : ControllerBase
             new { orderId },
             createItem
         );
+    }
+    [HttpDelete("{itemId:guid}")]
+    public async Task<IActionResult> DeleteItemByItemId([FromRoute] Guid itemId)
+    {
+      
+        await _service.ItemService.DeleteItemByItemIdAsync(itemId);
+        return NoContent();
     }
 }

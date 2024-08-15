@@ -35,5 +35,12 @@ public class ProductController : ControllerBase
         var createProduct = await _serviceManager.ProductService.CreateProductAsync(product, supplierId);
         return CreatedAtAction(nameof(GetProduct), new { productId = createProduct.ProductId, supplierId = product.SupplierId }, createProduct);
     }
+    [HttpDelete("{productId:guid}")]
+
+    public async Task<IActionResult> DeleteProduct([FromRoute] Guid productId, [FromRoute] Guid supplierId)
+    {
+        await _serviceManager.ProductService.DeleteProductAsync(productId, supplierId);
+        return NoContent();
+    }
 
 }
