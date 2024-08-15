@@ -16,30 +16,36 @@ public class SupplierController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetSuppliers()
+    public async Task<IActionResult> GetSuppliers()
     {
-        var suppliers = _serviceManager.SupplierService.GetSuppliers(trackChanges: false);
+        var suppliers = await _serviceManager.SupplierService.GetSuppliersAsync(trackChanges: false);
         return Ok(suppliers);
     }
 
     [HttpGet("{id:guid}")]
-    public IActionResult GetSupplierById([FromRoute] Guid id)
+    public async Task<IActionResult> GetSupplierById([FromRoute] Guid id)
     {
-        var supplier = _serviceManager.SupplierService.GetSupplierById(id, trackChanges: false);
+        var supplier = await _serviceManager.SupplierService.GetSupplierByIdAsync(id, trackChanges: false);
 
         return Ok(supplier);
     }
 
     [HttpPost]
-    public IActionResult CreateSupplier([FromBody] SupplierForCreationDto supplier)
+    public async Task<IActionResult> CreateSupplier([FromBody] SupplierForCreationDto supplier)
     {
         if (supplier == null)
             return BadRequest("SupplierForCreationDto object is null");
 
-        var createSupplier = _serviceManager.SupplierService.CreateSupplier(supplier);
+        var createSupplier = await _serviceManager.SupplierService.CreateSupplierAsync(supplier);
 
         // Use CreatedAtAction to reference the GetSupplierById action
         return CreatedAtAction(nameof(GetSupplierById), new { id = createSupplier.SupplierId }, createSupplier);
+    }
+    [HttpDelete("{supplierId:guid}")]
+    public async Task<IActionResult> DeleteSupplier([FromRoute] Guid supplierId)
+    {
+        await _serviceManager.SupplierService.DeleteSupplierAsync(supplierId, trackChanges: false);
+        return NoContent();
     }
 
 }

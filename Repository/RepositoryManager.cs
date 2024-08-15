@@ -38,5 +38,5 @@ public class RepositoryManager : IRepositoryManager
 
     public ISupplierRepository Supplier => _supplierRepository.Value;
 
-    public void Save() => _repositoryContext.SaveChanges();
+    public async Task SaveAsync() => await _repositoryContext.SaveChangesAsync();
 }

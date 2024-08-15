@@ -5,8 +5,9 @@ namespace Contracts;
 public interface IOrderRepository
 {
 
-    IEnumerable<Order> GetOrdersOfCustomer(Guid customerId, bool trackChanges);
-    Order? GetOrderById(Guid orderId, bool trackChanges);
+    Task<IEnumerable<Order>> GetOrdersOfCustomerAsync(Guid customerId, bool trackChanges);
+    Task<Order?> GetOrderByIdAsync(Guid orderId, bool trackChanges);
+
     void CreateOrder(Order order);
 
 }

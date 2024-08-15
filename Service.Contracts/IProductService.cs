@@ -4,7 +4,7 @@ namespace Service.Contracts;
 
 public interface IProductService
 {
-   public IEnumerable<ProductDto> GetProducts(Guid supplierId, bool trackChanges);
-    public ProductDto? GetProduct(Guid productId,Guid supplierId, bool trackChanges);
-    public ProductDto CreateProduct(ProductForCreationDto product, Guid supplierId);
+   public Task<IEnumerable<ProductDto>> GetProductsAsync(Guid supplierId, bool trackChanges);
+    public Task<ProductDto?> GetProductAsync(Guid productId,Guid supplierId, bool trackChanges);
+    public Task<ProductDto> CreateProductAsync(ProductForCreationDto product, Guid supplierId);
 }

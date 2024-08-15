@@ -1,5 +1,6 @@
 using Contracts;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
 
@@ -12,14 +13,12 @@ public class CustomerRepository : RepositoryBase<Customer>, ICustomerRepository
     public void CreateCustomer(Customer customer)
      => Create(customer);
 
-    public Customer? GetCustomer(Guid customerId, bool trackChanges)
-    {
-        var customer = FindByCondition(c => c.CustomerId.Equals(customerId),
+    public async Task<Customer?> GetCustomerAsync(Guid customerId, bool trackChanges)
+    => await FindByCondition(c => c.CustomerId.Equals(customerId),
         trackChanges)
-        .SingleOrDefault();
-       
-        return customer;
-    }
+        .SingleOrDefaultAsync();
+
+
 
 }
 

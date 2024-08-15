@@ -1,6 +1,7 @@
 using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
 
@@ -10,13 +11,13 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
     {
     }
 
-    public IEnumerable<Product> GetProducts(Guid suppierId, bool trackChanges)
-     => [.. FindByCondition(p => p.SupplierId == suppierId, trackChanges).OrderBy(p => p.Name)];
+    public async Task<IEnumerable<Product>> GetProductsAsync(Guid suppierId, bool trackChanges)
+     => await FindByCondition(p => p.SupplierId == suppierId, trackChanges).OrderBy(p => p.Name).ToListAsync();
 
-    public Product? GetProduct(Guid productId,bool trackChanges)
+    public async Task<Product?> GetProductAsync(Guid productId, bool trackChanges)
     {
-        var product = FindByCondition(p => p.ProductId == productId,
-         trackChanges).FirstOrDefault()
+        var product = await FindByCondition(p => p.ProductId == productId,
+         trackChanges).SingleOrDefaultAsync()
          ?? throw new ProductNotFoundException(productId);
         return product;
     }

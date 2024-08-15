@@ -1,40 +1,56 @@
 using AutoMapper;
 using Contracts;
+using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
 
 namespace Service;
 
-public class SupplierService  : ISupplierService
+public class SupplierService : ISupplierService
 {
     private readonly IRepositoryManager _repositoryManager;
     private readonly IMapper _mapper;
-    public SupplierService(IRepositoryManager repositoryManager, IMapper mapper){
+    public SupplierService(IRepositoryManager repositoryManager, IMapper mapper)
+    {
         _repositoryManager = repositoryManager;
         _mapper = mapper;
-     }
+    }
 
-    public SupplierDto CreateSupplier(SupplierForCreationDto supplier)
+    public async Task<SupplierDto> CreateSupplierAsync(SupplierForCreationDto supplier)
     {
         var supplierEntity = _mapper.Map<Supplier>(supplier);
         _repositoryManager.Supplier.CreateSupplier(supplierEntity);
-        _repositoryManager.Save();
+        await _repositoryManager.SaveAsync();
         var supplierToReturn = _mapper.Map<SupplierDto>(supplierEntity);
         return supplierToReturn;
     }
 
-    public SupplierDto GetSupplierById(Guid supplierId, bool trackChanges)
+    public async Task DeleteSupplierAsync(Guid supplierId, bool trackChanges)
     {
-        var supplier = _repositoryManager.Supplier.GetSupplierById(supplierId,trackChanges);
+        var supplier = await GetSupplierAndCheckIfItExists(supplierId, trackChanges: false);
+        _repositoryManager.Supplier.DeleteSupplier(supplier);
+
+    }
+
+    public async Task<SupplierDto> GetSupplierByIdAsync(Guid supplierId, bool trackChanges)
+    {
+        var supplier = await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges);
         var supplierDto = _mapper.Map<SupplierDto>(supplier);
         return supplierDto;
     }
 
-    public IEnumerable<SupplierDto> GetSuppliers(bool trackChanges)
+    public async Task<IEnumerable<SupplierDto>> GetSuppliersAsync(bool trackChanges)
     {
-        var suppliers = _repositoryManager.Supplier.GetSuppliers(trackChanges);
+
+        var suppliers = await _repositoryManager.Supplier.GetAllSuppliersAsync(trackChanges);
         var supplierDto = _mapper.Map<IEnumerable<SupplierDto>>(suppliers);
         return supplierDto;
+    }
+    private async Task<Supplier> GetSupplierAndCheckIfItExists(Guid supplierId, bool trackChanges)
+    {
+        var supplier = await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges)
+         ?? throw new SupplierNotFoundException(supplierId);
+        return supplier;
     }
 }

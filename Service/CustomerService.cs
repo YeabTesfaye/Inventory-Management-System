@@ -17,22 +17,33 @@ public sealed class CustomerService : ICustomerService
         _mapper = mapper;
     }
 
-    public CustomerDto CreateCustomer(CustomerForCreationDto customer)
+    public async Task<CustomerDto> CreateCustomerAsync(CustomerForCreationDto customer)
     {
         var createEntity = _mapper.Map<Customer>(customer);
         _repositoryManager.Customer.CreateCustomer(createEntity);
-        _repositoryManager.Save();
+        await _repositoryManager.SaveAsync();
         var customerToReturn = _mapper.Map<CustomerDto>(createEntity);
         return customerToReturn;
     }
-     
 
-    public CustomerDto? GetCustomer(Guid customerId, bool trackChanges)
+    public async Task DeleteCustomerAsync(Guid id, bool trackChanges)
     {
-        var customer = _repositoryManager.Customer.GetCustomer(customerId,trackChanges)
+       await GetCustomerAndCheckIfItExists(id, trackChanges: false);
+        throw new NotImplementedException();
+    }
+
+    public async Task<CustomerDto?> GetCustomerAsync(Guid customerId, bool trackChanges)
+    {
+        var customer = await _repositoryManager.Customer.GetCustomerAsync(customerId, trackChanges)
          ?? throw new CustomerNotFoundException(customerId);
         var customerDto = _mapper.Map<CustomerDto>(customer);
         return customerDto;
+    }
+    private async Task<Customer> GetCustomerAndCheckIfItExists(Guid id, bool trackChanges)
+    {
+        var customer = await _repositoryManager.Customer.GetCustomerAsync(id, trackChanges)
+         ?? throw new CustomerNotFoundException(id);
+        return customer;
     }
 
 }

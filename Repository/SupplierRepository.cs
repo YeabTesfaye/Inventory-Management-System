@@ -1,5 +1,6 @@
 using Contracts;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
 
@@ -10,11 +11,14 @@ public class SupplierRepository : RepositoryBase<Supplier>, ISupplierRepository
     }
 
     public void CreateSupplier(Supplier supplier)
-     => Create(supplier);
+        => Create(supplier);
 
-    public Supplier? GetSupplierById(Guid supplierId, bool trackChanges)
-    => FindByCondition(s => s.SupplierId.Equals(supplierId), trackChanges).FirstOrDefault();
+    public void DeleteSupplier(Supplier supplier)
+        => Delete(supplier);
 
-    public IEnumerable<Supplier> GetSuppliers(bool trackChanges)
-    => [.. FindByCondition(o => true, trackChanges)];
+    public async Task<Supplier?> GetSupplierByIdAsync(Guid supplierId, bool trackChanges)
+        => await FindByCondition(s => s.SupplierId.Equals(supplierId), trackChanges).SingleOrDefaultAsync();
+
+    public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync(bool trackChanges)
+        => await FindByCondition(o => true, trackChanges).ToListAsync();
 }

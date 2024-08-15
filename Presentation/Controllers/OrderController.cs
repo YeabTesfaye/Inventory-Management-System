@@ -13,24 +13,27 @@ public class OrderController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
-    public IActionResult GetOrdersOfCustomer(Guid customerId)
+    public async Task<IActionResult> GetOrdersOfCustomer(Guid customerId)
     {
-        var orders = _serviceManager.OrderService.GetOrdersOfCustomer(customerId,trackChanges: false);
+        var orders = await _serviceManager.OrderService.GetOrdersOfCustomerAsync(customerId, trackChanges: false);
         return Ok(orders);
     }
     [HttpGet("{orderId:guid}")]
-    public IActionResult GetOrderById([FromRoute] Guid orderId, [FromRoute] Guid customerId)
+    public async Task<IActionResult> GetOrderById([FromRoute] Guid orderId, [FromRoute] Guid customerId)
     {
-        var order = _serviceManager.OrderService.GetOrderById(orderId, customerId, trackChanges: false);
+        var order = await _serviceManager.OrderService.GetOrderByIdAsync(orderId, customerId, trackChanges: false);
         return Ok(order);
     }
+
     [HttpPost]
-    public IActionResult CreateOrder([FromBody] OrderForCreationDto order, [FromRoute] Guid customerId){
+    public async Task<IActionResult> CreateOrder([FromBody] OrderForCreationDto order, [FromRoute] Guid customerId)
+    {
         if (order == null)
             return BadRequest("OrderForCreationDto object is null");
 
-        var createOrder = _serviceManager.OrderService.CreateOrder(order,customerId);
-        return CreatedAtAction(nameof(GetOrderById), new { orderId = createOrder.OrderId }, createOrder);
+        var createOrder = await _serviceManager.OrderService.CreateOrderAsync(order, customerId);
+        return CreatedAtAction(nameof(GetOrderById), new { orderId = createOrder.OrderId, customerId }, createOrder);
     }
+
 
 }

@@ -29,7 +29,4 @@ services.AddSqlServer<RepositoryContext>(configuration.GetConnectionString("sqlC
    services.AddScoped<IRepositoryManager, RepositoryManager>();
     public static void ConfigureServiceManager(this IServiceCollection services) =>
    services.AddScoped<IServiceManager, ServiceManager>();
-    
-
-
 }

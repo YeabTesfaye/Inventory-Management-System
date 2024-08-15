@@ -4,7 +4,7 @@ namespace Service.Contracts;
 
 public interface IOrderService
 {
-    public IEnumerable<OrderDto> GetOrdersOfCustomer(Guid customerId, bool trackChanges);
-    public OrderDto? GetOrderById(Guid orderId,Guid customerId,bool trackChanges);
-    OrderDto CreateOrder(OrderForCreationDto order, Guid customerId);
+    public Task<IEnumerable<OrderDto>> GetOrdersOfCustomerAsync(Guid customerId, bool trackChanges);
+    public Task<OrderDto?> GetOrderByIdAsync(Guid orderId, Guid customerId, bool trackChanges);
+    Task<OrderDto> CreateOrderAsync(OrderForCreationDto order, Guid customerId);
 }

@@ -1,5 +1,6 @@
 using Contracts;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository;
 
@@ -11,9 +12,9 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 
     public void CreateOrder(Order order) => Create(order);
 
-    public Order? GetOrderById(Guid orderId, bool trackChanges)
-    => FindByCondition(o => o.OrderId == orderId, trackChanges).FirstOrDefault();
+    public async Task<Order?> GetOrderByIdAsync(Guid orderId, bool trackChanges)
+    => await FindByCondition(o => o.OrderId == orderId, trackChanges).SingleOrDefaultAsync();
 
-    public IEnumerable<Order> GetOrdersOfCustomer(Guid customerId, bool trackChanges)
-    => [.. FindByCondition(o => o.CustomerId == customerId, trackChanges).OrderBy(o => o.OrderDate)];
+    public async Task<IEnumerable<Order>> GetOrdersOfCustomerAsync(Guid customerId, bool trackChanges)
+    => await FindByCondition(o => o.CustomerId == customerId, trackChanges).OrderBy(o => o.OrderDate).ToListAsync();
 }

@@ -4,8 +4,8 @@ namespace Service.Contracts;
 
 public interface IItemService
 {
-    IEnumerable<ItemDto> GetItemsOfOrder(Guid orderId, bool trackChanges);
-    ItemDto? GetItemsByProductId(Guid orderId,Guid productId);
-    ItemDto CreateItem(Guid orderId, ItemForCreationDto item);
+    Task<IEnumerable<ItemDto>> GetItemsOfOrderAsync(Guid orderId, bool trackChanges);
+    Task<ItemDto?> GetItemsByProductIdAsync(Guid orderId,Guid productId);
+    Task<ItemDto> CreateItemAsync(Guid orderId, ItemForCreationDto item);
 
 }

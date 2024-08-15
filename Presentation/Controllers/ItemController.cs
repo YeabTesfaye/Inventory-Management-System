@@ -12,26 +12,26 @@ public class ItemController : ControllerBase
     public ItemController(IServiceManager service) => _service = service;
 
     [HttpGet]
-    public IActionResult GetItemsOfOrder(Guid orderId)
+    public async Task<IActionResult> GetItemsOfOrder(Guid orderId)
     {
-        var items = _service.ItemService.GetItemsOfOrder(orderId, trackChanges: false);
+        var items = await _service.ItemService.GetItemsOfOrderAsync(orderId, trackChanges: false);
         return Ok(items);
     }
 
     [HttpGet("product/{productId:guid}")]
-    public IActionResult GetItemsByProductId([FromRoute] Guid orderId, [FromRoute] Guid productId)
+    public async Task<IActionResult> GetItemsByProductId([FromRoute] Guid orderId, [FromRoute] Guid productId)
     {
-        var items = _service.ItemService.GetItemsByProductId(orderId, productId);
+        var items = await _service.ItemService.GetItemsByProductIdAsync(orderId, productId);
         return Ok(items);
     }
 
     [HttpPost]
-    public IActionResult CreateItem([FromRoute] Guid orderId, [FromBody] ItemForCreationDto item)
+    public async Task<IActionResult> CreateItem([FromRoute] Guid orderId, [FromBody] ItemForCreationDto item)
     {
         if (item == null)
             return BadRequest("ItemForCreationDto object is null");
         item.OrderId = orderId;
-        var createItem = _service.ItemService.CreateItem(orderId, item);
+        var createItem = await _service.ItemService.CreateItemAsync(orderId, item);
 
         return CreatedAtAction(
             nameof(GetItemsOfOrder),

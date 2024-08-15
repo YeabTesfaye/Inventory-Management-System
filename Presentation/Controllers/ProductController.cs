@@ -14,25 +14,25 @@ public class ProductController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
-    public IActionResult GetProducts(Guid supplierId)
+    public async Task<IActionResult> GetProducts(Guid supplierId)
     {
-        var products = _serviceManager.ProductService.GetProducts(supplierId, trackChanges: false);
+        var products = await _serviceManager.ProductService.GetProductsAsync(supplierId, trackChanges: false);
         return Ok(products);
     }
     [HttpGet("{productId:guid}")]
 
-    public IActionResult GetProduct([FromRoute] Guid productId, [FromRoute] Guid supplierId)
+    public async Task<IActionResult> GetProduct([FromRoute] Guid productId, [FromRoute] Guid supplierId)
     {
-        var product = _serviceManager.ProductService.GetProduct(productId, supplierId, trackChanges: false);
+        var product = await _serviceManager.ProductService.GetProductAsync(productId, supplierId, trackChanges: false);
         return Ok(product);
     }
     [HttpPost]
-    public IActionResult CreateProduct([FromBody] ProductForCreationDto product, [FromRoute] Guid supplierId)
+    public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto product, [FromRoute] Guid supplierId)
     {
 
         if (product == null)
             return BadRequest("ProductForCreationDto object is null");
-        var createProduct = _serviceManager.ProductService.CreateProduct(product,supplierId);
+        var createProduct = await _serviceManager.ProductService.CreateProductAsync(product, supplierId);
         return CreatedAtAction(nameof(GetProduct), new { productId = createProduct.ProductId, supplierId = product.SupplierId }, createProduct);
     }
 

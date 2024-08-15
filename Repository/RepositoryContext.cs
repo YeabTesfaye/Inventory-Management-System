@@ -24,7 +24,7 @@ public class RepositoryContext : DbContext
         modelBuilder.Entity<Product>()
             .Property(p => p.Price)
             .HasColumnType("decimal(18, 2)"); // Adjust the precision and scale as needed
-        
+
         modelBuilder.Entity<Order>()
            .Property(o => o.TotalAmount)
             .HasColumnType("decimal(18, 2)");

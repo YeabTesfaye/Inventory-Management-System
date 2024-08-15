@@ -13,18 +13,24 @@ public class CustomerController : ControllerBase
      => _serviceManager = serviceManager;
 
     [HttpGet("{customerId:guid}")]
-    public IActionResult GetCustomer([FromRoute] Guid customerId)
+    public async Task<IActionResult> GetCustomer([FromRoute] Guid customerId)
     {
 
-        var customer = _serviceManager.CustomerService.GetCustomer(customerId, trackChanges:false);
+        var customer = await _serviceManager.CustomerService.GetCustomerAsync(customerId, trackChanges: false);
         return Ok(customer);
     }
     [HttpPost]
-    public IActionResult CreateCustomer([FromBody] CustomerForCreationDto customer)
+    public async Task<IActionResult> CreateCustomer([FromBody] CustomerForCreationDto customer)
     {
         if (customer == null)
             return BadRequest("CustomerForCreationDto object is null");
-        var createCustomer = _serviceManager.CustomerService.CreateCustomer(customer);
+        var createCustomer = await _serviceManager.CustomerService.CreateCustomerAsync(customer);
         return CreatedAtAction(nameof(GetCustomer), new { productId = createCustomer.CustomerId, customerId = createCustomer.CustomerId }, createCustomer);
+    }
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteCustomer([FromRoute] Guid id)
+    {
+        await _serviceManager.CustomerService.DeleteCustomerAsync(id, trackChanges: false);
+        return NoContent();
     }
 }

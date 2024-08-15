@@ -4,8 +4,8 @@ namespace Contracts;
 
 public interface IItemRepository
 {
-    IEnumerable<Item> GetItemsOfOrder(Guid orderId, bool trackChanges);
-    Item? GetItemsByProductId(Guid productId);
+    Task<IEnumerable<Item>> GetItemsOfOrderAsync(Guid orderId, bool trackChanges);
+    Task<Item?> GetItemsByProductIdAsync(Guid productId);
     void CreateItem(Item item);
     
 }

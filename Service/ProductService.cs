@@ -17,36 +17,37 @@ public sealed class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public ProductDto CreateProduct(ProductForCreationDto product, Guid supplierId)
+    public async Task<ProductDto> CreateProductAsync(ProductForCreationDto product, Guid supplierId)
     {
-        CheckIfSupplierExists(supplierId, trackChanges: false);
+       await CheckIfSupplierExists(supplierId, trackChanges: false);
         var productEntity = _mapper.Map<Product>(product);
         _repositoryManager.Product.CreateProduct(productEntity);
-        _repositoryManager.Save();
+       await _repositoryManager.SaveAsync();
         var productToReturn = _mapper.Map<ProductDto>(productEntity);
         return productToReturn;
 
     }
 
-    public ProductDto? GetProduct(Guid productId, Guid supplierId, bool trackChanges)
+    public async Task<ProductDto?> GetProductAsync(Guid productId, Guid supplierId, bool trackChanges)
     {
-        CheckIfSupplierExists(supplierId, trackChanges: false);
-        var product = _repositoryManager.Product.GetProduct(productId, trackChanges)
+        await CheckIfSupplierExists(supplierId, trackChanges: false);
+        var product = await _repositoryManager.Product.GetProductAsync(productId, trackChanges)
          ?? throw new ProductNotFoundException(productId);
         var productDto = _mapper.Map<ProductDto>(product);
         return productDto;
     }
 
 
-    public IEnumerable<ProductDto> GetProducts(Guid supplierId, bool trackChanges)
+    public async Task<IEnumerable<ProductDto>> GetProductsAsync(Guid supplierId, bool trackChanges)
     {
-        var products = _repositoryManager.Product.GetProducts(supplierId, trackChanges);
+        await CheckIfSupplierExists(supplierId,trackChanges:false);
+        var products = await _repositoryManager.Product.GetProductsAsync(supplierId, trackChanges);
         var producsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
         return producsDto;
     }
-    private void CheckIfSupplierExists(Guid supplierId, bool trackChanges)
+    private async Task CheckIfSupplierExists(Guid supplierId, bool trackChanges)
     {
-        _ = _repositoryManager.Supplier.GetSupplierById(supplierId, trackChanges)
+        _ =await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges)
         ?? throw new SupplierNotFoundException(supplierId);
     }
 }

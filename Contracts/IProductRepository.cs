@@ -4,7 +4,7 @@ namespace Contracts;
 
 public interface IProductRepository
 {
-    IEnumerable<Product> GetProducts(Guid supplierId, bool trackChanges);
-    Product? GetProduct(Guid productId, bool trackChanges);
+    Task<IEnumerable<Product>> GetProductsAsync(Guid supplierId, bool trackChanges);
+    Task<Product?> GetProductAsync(Guid productId, bool trackChanges);
     void CreateProduct(Product product);
 }

@@ -4,8 +4,9 @@ namespace Service.Contracts;
 
 public interface ISupplierService
 {
-    public IEnumerable<SupplierDto> GetSuppliers(bool trackChanges);
-    public SupplierDto CreateSupplier(SupplierForCreationDto supplier);
-    public SupplierDto GetSupplierById(Guid supplierId, bool trackChanges);
+    public Task<IEnumerable<SupplierDto>> GetSuppliersAsync(bool trackChanges);
+    public Task<SupplierDto> CreateSupplierAsync(SupplierForCreationDto supplier);
+    public Task<SupplierDto> GetSupplierByIdAsync(Guid supplierId, bool trackChanges);
+    Task DeleteSupplierAsync(Guid supplierId, bool trackChanges);
   
 }

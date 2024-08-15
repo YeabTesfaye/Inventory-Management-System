@@ -17,45 +17,45 @@ public sealed class ItemService : IItemService
         _mapper = mapper;
     }
 
-    public IEnumerable<ItemDto> GetItemsOfOrder(Guid orderId, bool trackChanges)
+    public async Task<IEnumerable<ItemDto>> GetItemsOfOrderAsync(Guid orderId, bool trackChanges)
     {
         var items =
-        _repositoryManager.Item.GetItemsOfOrder(orderId, trackChanges);
+       await _repositoryManager.Item.GetItemsOfOrderAsync(orderId, trackChanges);
         var itemsDto = _mapper.Map<IEnumerable<ItemDto>>(items);
         return itemsDto;
     }
 
 
-    public ItemDto? GetItemsByProductId(Guid orderId, Guid productId)
+    public async Task<ItemDto?> GetItemsByProductIdAsync(Guid orderId, Guid productId)
     {
-        CheckIfOrderExists(orderId, trackChanges: false);
-        CheckIfProductExists(productId,trackChanges:false);
-        var items = _repositoryManager.Item.GetItemsByProductId(productId)
+       await CheckIfOrderExists(orderId, trackChanges: false);
+       await CheckIfProductExists(productId, trackChanges: false);
+        var items = await _repositoryManager.Item.GetItemsByProductIdAsync(productId)
         ?? throw new ProductNotFoundException(productId);
         var itemsDto = _mapper.Map<ItemDto>(items);
         return itemsDto;
     }
 
-    public ItemDto CreateItem(Guid orderId, ItemForCreationDto item)
+    public async Task<ItemDto> CreateItemAsync(Guid orderId, ItemForCreationDto item)
     {
-        CheckIfOrderExists(orderId, trackChanges: false);
+       await CheckIfOrderExists(orderId, trackChanges: false);
         var itemEntity = _mapper.Map<Item>(item);
         _repositoryManager.Item.CreateItem(itemEntity);
-        _repositoryManager.Save();
+       await _repositoryManager.SaveAsync();
         var itemToReturn = _mapper.Map<ItemDto>(itemEntity);
         return itemToReturn;
     }
 
-    private void CheckIfOrderExists(Guid orderId, bool trackChanges)
+    private async Task CheckIfOrderExists(Guid orderId, bool trackChanges)
     {
-        _ = _repositoryManager.Order.GetOrderById(orderId, trackChanges)
+        _ = await _repositoryManager.Order.GetOrderByIdAsync(orderId, trackChanges)
         ?? throw new OrderNotFoundException(orderId);
     }
-    private void CheckIfProductExists(Guid productId, bool trackChanges)
+    private async Task CheckIfProductExists(Guid productId, bool trackChanges)
     {
-        _ = _repositoryManager.Product.GetProduct(productId, trackChanges)
+        _ = await _repositoryManager.Product.GetProductAsync(productId, trackChanges)
         ?? throw new ProductNotFoundException(productId);
     }
-   
+
 
 }
