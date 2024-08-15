@@ -35,6 +35,8 @@ public class SupplierController : ControllerBase
     {
         if (supplier == null)
             return BadRequest("SupplierForCreationDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
 
         var createSupplier = await _serviceManager.SupplierService.CreateSupplierAsync(supplier);
 

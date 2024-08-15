@@ -32,6 +32,8 @@ public class ProductController : ControllerBase
 
         if (product == null)
             return BadRequest("ProductForCreationDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
         var createProduct = await _serviceManager.ProductService.CreateProductAsync(product, supplierId);
         return CreatedAtAction(nameof(GetProduct), new { productId = createProduct.ProductId, supplierId = product.SupplierId }, createProduct);
     }

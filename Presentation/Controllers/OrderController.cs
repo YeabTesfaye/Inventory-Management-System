@@ -31,6 +31,8 @@ public class OrderController : ControllerBase
     {
         if (order == null)
             return BadRequest("OrderForCreationDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
 
         var createOrder = await _serviceManager.OrderService.CreateOrderAsync(order, customerId);
         return CreatedAtAction(nameof(GetOrderById), new { orderId = createOrder.OrderId, customerId }, createOrder);

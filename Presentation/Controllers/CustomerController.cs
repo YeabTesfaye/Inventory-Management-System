@@ -24,6 +24,8 @@ public class CustomerController : ControllerBase
     {
         if (customer == null)
             return BadRequest("CustomerForCreationDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
         var createCustomer = await _serviceManager.CustomerService.CreateCustomerAsync(customer);
         return CreatedAtAction(nameof(GetCustomer), new { productId = createCustomer.CustomerId, customerId = createCustomer.CustomerId }, createCustomer);
     }

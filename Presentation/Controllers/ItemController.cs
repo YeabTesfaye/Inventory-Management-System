@@ -37,6 +37,8 @@ public class ItemController : ControllerBase
     {
         if (item == null)
             return BadRequest("ItemForCreationDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
         item.OrderId = orderId;
         var createItem = await _service.ItemService.CreateItemAsync(orderId, item);
 
@@ -49,7 +51,7 @@ public class ItemController : ControllerBase
     [HttpDelete("{itemId:guid}")]
     public async Task<IActionResult> DeleteItemByItemId([FromRoute] Guid itemId)
     {
-      
+
         await _service.ItemService.DeleteItemByItemIdAsync(itemId);
         return NoContent();
     }
