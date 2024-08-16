@@ -14,7 +14,7 @@ public class OrderController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
-    public async Task<IActionResult> GetOrdersOfCustomer(Guid customerId)
+    public async Task<IActionResult> GetOrdersOfCustomer([FromRoute] Guid customerId)
     {
         var orders = await _serviceManager.OrderService.GetOrdersOfCustomerAsync(customerId, trackChanges: false);
         return Ok(orders);
@@ -37,6 +37,19 @@ public class OrderController : ControllerBase
         var createOrder = await _serviceManager.OrderService.CreateOrderAsync(order, customerId);
         return CreatedAtAction(nameof(GetOrderById), new { orderId = createOrder.OrderId, customerId }, createOrder);
     }
+
+    [HttpPut("{itemId:guid}")]
+    public async Task<IActionResult> UpdateOrder([FromBody] OrderForUpdateDto order, [FromRoute] Guid customerId,
+    [FromRoute] Guid itemId)
+    {
+        if (order is null)
+            return BadRequest("OrderForUpdateDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+        await _serviceManager.OrderService.UpdateOrder(customerId, itemId, order, trackChanges: true);
+        return NoContent();
+    }
+   
     [HttpDelete("{orderId:guid}")]
     public async Task<IActionResult> DeleteOrderByOrderId([FromRoute] Guid orderId)
     {

@@ -16,21 +16,26 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.QuantityInStock, opt => opt.MapFrom(src => src.QuantityInStock))
             .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
             .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId));
-        CreateMap<Customer, CustomerDto>()
-        .ForMember(dest => dest.FullName, opt =>
-        opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
         CreateMap<Order, OrderDto>();
         CreateMap<Product, ProductDto>();
-        CreateMap<Supplier,SupplierDto>();
-        CreateMap<SupplierForCreationDto,Supplier>();
-        CreateMap<Product,ProductDto>();
-        CreateMap<ProductForCreationDto,Product>();
-        CreateMap<Customer,CustomerDto>();
-        CreateMap<CustomerForCreationDto,Customer>();
-        CreateMap<Item,ItemDto>();
-        CreateMap<ItemForCreationDto,Item>();
-        CreateMap<Order,OrderDto>();
+        CreateMap<Supplier, SupplierDto>();
+        CreateMap<SupplierForCreationDto, Supplier>();
+        CreateMap<Product, ProductDto>();
+        CreateMap<ProductForCreationDto, Product>();
+        CreateMap<Customer, CustomerDto>();
+        CreateMap<CustomerForCreationDto, Customer>();
+        CreateMap<Item, ItemDto>();
+        CreateMap<ItemForCreationDto, Item>();
+        CreateMap<Order, OrderDto>();
         CreateMap<OrderForCreationDto, Order>();
+        CreateMap<CustomerForUpdateDto, Customer>();
+        CreateMap<Customer, CustomerDto>()
+    .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"));
+        CreateMap<OrderForUpdateDto, Order>();
+        CreateMap<ItemForUpdateDto, Item>()
+            .ForMember(dest => dest.ItemId, opt => opt.Ignore());
+        CreateMap<SupplierForUpdateDto, Supplier>();
+
 
     }
 

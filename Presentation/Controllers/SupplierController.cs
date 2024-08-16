@@ -49,5 +49,17 @@ public class SupplierController : ControllerBase
         await _serviceManager.SupplierService.DeleteSupplierAsync(supplierId, trackChanges: false);
         return NoContent();
     }
+    [HttpPut("{supplierId:guid}")]
+    public async Task<IActionResult> UpdateSupplier([FromBody] SupplierForUpdateDto supplier, [FromRoute] Guid supplierId)
+    {
+        if (supplier is null)
+            return BadRequest("SupplierForUpdateDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
+        await _serviceManager.SupplierService.UpdateSupplierAsync(supplierId, supplier, trackChanges: true);
+        return NoContent();
+
+    }
 
 }

@@ -1,3 +1,4 @@
+using System.Data.Common;
 using AutoMapper;
 using Contracts;
 using Entities.Exceptions;
@@ -48,9 +49,29 @@ public class SupplierService : ISupplierService
         var supplierDto = _mapper.Map<IEnumerable<SupplierDto>>(suppliers);
         return supplierDto;
     }
+
+    public async Task UpdateSupplierAsync(Guid supplierId, SupplierForUpdateDto supplier, bool trackChanges)
+    {
+        var supplierEntity = await GetSupplierAndCheckIfItExists(supplierId, trackChanges);
+        _mapper.Map(supplier, supplierEntity);
+        await _repositoryManager.SaveAsync();
+    }
+    public async Task UpdateCustomerAsync(Guid id, CustomerForUpdateDto customer, bool trackChanges)
+    {
+        // Fetch the customer from the repository with tracking as specified
+        var customerEntity = await _repositoryManager.Customer.GetCustomerAsync(id, trackChanges)
+                             ?? throw new CustomerNotFoundException(id);
+
+        // Map the DTO to the entity
+        _mapper.Map(customer, customerEntity);
+
+        // Save the changes to the database
+        await _repositoryManager.SaveAsync();
+    }
+
     private async Task<Supplier> GetSupplierAndCheckIfItExists(Guid supplierId, bool trackChanges)
     {
-        var supplier = await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges)
+        var supplier = await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges:false)
          ?? throw new SupplierNotFoundException(supplierId);
         return supplier;
     }

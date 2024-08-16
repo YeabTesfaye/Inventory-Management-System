@@ -21,6 +21,7 @@ public class ItemController : ControllerBase
     [HttpGet("{itemId:guid}")]
     public async Task<IActionResult> GetItemsByItemId([FromRoute] Guid itemId)
     {
+
         var items = await _service.ItemService.GetItemByItemIdAsync(itemId);
         return Ok(items);
     }
@@ -48,6 +49,19 @@ public class ItemController : ControllerBase
             createItem
         );
     }
+    [HttpPut("{itemId:guid}")]
+    public async Task<IActionResult> UpdateItem([FromBody] ItemForUpdateDto item,
+   [FromRoute] Guid orderId, [FromRoute] Guid itemId)
+    {
+        if (item == null)
+            return BadRequest("ItemForUpdateDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
+        await _service.ItemService.UpdateItemAsync(orderId, itemId, item, trackChanges: true);
+        return NoContent();
+    }
+
     [HttpDelete("{itemId:guid}")]
     public async Task<IActionResult> DeleteItemByItemId([FromRoute] Guid itemId)
     {

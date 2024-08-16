@@ -49,6 +49,16 @@ public sealed class OrderService : IOrderService
         var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
         return ordersDto;
     }
+
+    public async Task UpdateOrder(Guid customerId, Guid itemId, OrderForUpdateDto order, bool trackChanges)
+    {
+        await CheckIfCustomerExists(customerId, trackChanges: false);
+        var orderEntity = await CheckIfOrderExistAndReturn(itemId, trackChanges: false);
+        Console.WriteLine(orderEntity);
+        _mapper.Map(order, orderEntity);
+        await _repositoryManager.SaveAsync();
+    }
+
     private async Task CheckIfCustomerExists(Guid customerId, bool trackChanges)
     {
         _ = await _repositoryManager.Customer.GetCustomerAsync(customerId, trackChanges)

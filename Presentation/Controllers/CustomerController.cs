@@ -35,4 +35,17 @@ public class CustomerController : ControllerBase
         await _serviceManager.CustomerService.DeleteCustomerAsync(id, trackChanges: false);
         return NoContent();
     }
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateCustomer([FromBody] CustomerForUpdateDto customer, [FromRoute] Guid id)
+    {
+        if (customer is null)
+            return BadRequest("CustomerForUpdateDto object is null");
+        if (!ModelState.IsValid)
+            return UnprocessableEntity(ModelState);
+
+        await _serviceManager.CustomerService.UpdateCustomerAsync(id, customer, trackChanges: true);
+        return NoContent();
+
+    }
+
 }

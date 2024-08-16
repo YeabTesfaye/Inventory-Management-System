@@ -10,5 +10,5 @@ public interface IItemService
     Task DeleteItemAsync(Guid id, bool trackChanges);
     Task<ItemDto> GetItemByItemIdAsync(Guid id);
     Task DeleteItemByItemIdAsync(Guid id);
-
+    Task UpdateItemAsync(Guid orderId, Guid itemId, ItemForUpdateDto item, bool trackChanges);
 }

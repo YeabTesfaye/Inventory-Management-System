@@ -8,5 +8,5 @@ public interface ISupplierService
     public Task<SupplierDto> CreateSupplierAsync(SupplierForCreationDto supplier);
     public Task<SupplierDto> GetSupplierByIdAsync(Guid supplierId, bool trackChanges);
     Task DeleteSupplierAsync(Guid supplierId, bool trackChanges);
-  
+    Task UpdateSupplierAsync(Guid supplierId, SupplierForUpdateDto supplier, bool trackChanges);
 }

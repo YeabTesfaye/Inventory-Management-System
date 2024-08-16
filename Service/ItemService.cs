@@ -46,17 +46,6 @@ public sealed class ItemService : IItemService
         return itemToReturn;
     }
 
-    private async Task CheckIfOrderExists(Guid orderId, bool trackChanges)
-    {
-        _ = await _repositoryManager.Order.GetOrderByIdAsync(orderId, trackChanges)
-        ?? throw new OrderNotFoundException(orderId);
-    }
-    private async Task CheckIfProductExists(Guid productId, bool trackChanges)
-    {
-        _ = await _repositoryManager.Product.GetProductAsync(productId, trackChanges)
-        ?? throw new ProductNotFoundException(productId);
-    }
-
     public Task DeleteItemAsync(Guid id, bool trackChanges)
     {
         throw new NotImplementedException();
@@ -75,10 +64,40 @@ public sealed class ItemService : IItemService
         _repositoryManager.Item.DeleteItem(item);
         await _repositoryManager.SaveAsync();
     }
+
+    public async Task UpdateItemAsync(Guid orderId, Guid itemId, ItemForUpdateDto item, bool trackChanges)
+    {
+        // Check if the order exists
+        await CheckIfOrderExists(orderId, trackChanges: false);
+
+        // Retrieve the item and check if it exists
+        var itemEntity = await GetItemAndCheckIfItExists(itemId);
+
+        // Map the DTO to the entity
+        _mapper.Map(item, itemEntity);
+
+        // Save the changes to the database
+        await _repositoryManager.SaveAsync();
+    }
+
+
     private async Task<Item> GetItemAndCheckIfItExists(Guid id)
     {
         var item = _ = await _repositoryManager.Item.GetItemByItemIdAsync(id)
         ?? throw new ItemNotFoundException(id);
         return item;
     }
+
+    private async Task CheckIfOrderExists(Guid orderId, bool trackChanges)
+    {
+        _ = await _repositoryManager.Order.GetOrderByIdAsync(orderId, trackChanges)
+        ?? throw new OrderNotFoundException(orderId);
+    }
+    private async Task CheckIfProductExists(Guid productId, bool trackChanges)
+    {
+        _ = await _repositoryManager.Product.GetProductAsync(productId, trackChanges)
+        ?? throw new ProductNotFoundException(productId);
+    }
+    
+
 }
