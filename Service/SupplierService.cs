@@ -5,6 +5,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -42,10 +43,10 @@ public class SupplierService : ISupplierService
         return supplierDto;
     }
 
-    public async Task<IEnumerable<SupplierDto>> GetSuppliersAsync(bool trackChanges)
+    public async Task<IEnumerable<SupplierDto>> GetSuppliersAsync(SupplierParameters supplierParameters, bool trackChanges)
     {
 
-        var suppliers = await _repositoryManager.Supplier.GetAllSuppliersAsync(trackChanges);
+        var suppliers = await _repositoryManager.Supplier.GetAllSuppliersAsync(supplierParameters,trackChanges);
         var supplierDto = _mapper.Map<IEnumerable<SupplierDto>>(suppliers);
         return supplierDto;
     }

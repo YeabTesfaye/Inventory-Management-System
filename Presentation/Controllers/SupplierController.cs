@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Presentation.Controllers;
 
@@ -16,9 +17,9 @@ public class SupplierController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetSuppliers()
+    public async Task<IActionResult> GetSuppliers([FromQuery] SupplierParameters supplierParameters)
     {
-        var suppliers = await _serviceManager.SupplierService.GetSuppliersAsync(trackChanges: false);
+        var suppliers = await _serviceManager.SupplierService.GetSuppliersAsync(supplierParameters,trackChanges: false);
         return Ok(suppliers);
     }
 

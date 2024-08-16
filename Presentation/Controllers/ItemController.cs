@@ -2,6 +2,7 @@ using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Presentation.Controllers;
 
@@ -13,9 +14,9 @@ public class ItemController : ControllerBase
     public ItemController(IServiceManager service) => _service = service;
 
     [HttpGet]
-    public async Task<IActionResult> GetItemsOfOrder(Guid orderId)
+    public async Task<IActionResult> GetItemsOfOrder(Guid orderId,[FromQuery] ItemParameters itemParameters )
     {
-        var items = await _service.ItemService.GetItemsOfOrderAsync(orderId, trackChanges: false);
+        var items = await _service.ItemService.GetItemsOfOrderAsync(orderId, itemParameters,trackChanges: false);
         return Ok(items);
     }
     [HttpGet("{itemId:guid}")]

@@ -2,6 +2,7 @@ using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Shared.RequestFeatures;
 
 namespace Repository;
 
@@ -11,8 +12,15 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
     {
     }
 
-    public async Task<IEnumerable<Product>> GetProductsAsync(Guid suppierId, bool trackChanges)
-     => await FindByCondition(p => p.SupplierId == suppierId, trackChanges).OrderBy(p => p.Name).ToListAsync();
+    public async Task<IEnumerable<Product>> GetProductsAsync(Guid supplierId, ProductParameters productParameters, bool trackChanges)
+    {
+        return await FindByCondition(p => p.SupplierId == supplierId, trackChanges)
+            .OrderBy(p => p.Name)
+            .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
+            .Take(productParameters.PageSize)
+            .ToListAsync();
+    }
+
 
     public async Task<Product?> GetProductAsync(Guid productId, bool trackChanges)
     {

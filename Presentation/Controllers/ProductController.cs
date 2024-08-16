@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Presentation.Controllers;
 
@@ -14,9 +15,9 @@ public class ProductController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
-    public async Task<IActionResult> GetProducts(Guid supplierId)
+    public async Task<IActionResult> GetProducts(Guid supplierId, [FromQuery] ProductParameters productParameters)
     {
-        var products = await _serviceManager.ProductService.GetProductsAsync(supplierId, trackChanges: false);
+        var products = await _serviceManager.ProductService.GetProductsAsync(supplierId,productParameters, trackChanges: false);
         return Ok(products);
     }
     [HttpGet("{productId:guid}")]

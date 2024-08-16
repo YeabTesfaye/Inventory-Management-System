@@ -1,6 +1,7 @@
 using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Shared.RequestFeatures;
 
 namespace Repository;
 
@@ -19,6 +20,9 @@ public class SupplierRepository : RepositoryBase<Supplier>, ISupplierRepository
     public async Task<Supplier?> GetSupplierByIdAsync(Guid supplierId, bool trackChanges)
         => await FindByCondition(s => s.SupplierId.Equals(supplierId), trackChanges).SingleOrDefaultAsync();
 
-    public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync(bool trackChanges)
-        => await FindByCondition(o => true, trackChanges).ToListAsync();
+    public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync(SupplierParameters supplierParameters, bool trackChanges)
+        => await FindByCondition(o => true, trackChanges)
+      .Skip((supplierParameters.PageNumber - 1) * supplierParameters.PageSize)
+      .Take(supplierParameters.PageSize)
+      .ToListAsync();
 }

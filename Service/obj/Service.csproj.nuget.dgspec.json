@@ -31,6 +31,9 @@
             "projectReferences": {
               "C:\\Users\\yeabiseraT\\Desktop\\Projects\\Inventory Management System\\Entities\\Entities.csproj": {
                 "projectPath": "C:\\Users\\yeabiseraT\\Desktop\\Projects\\Inventory Management System\\Entities\\Entities.csproj"
+              },
+              "C:\\Users\\yeabiseraT\\Desktop\\Projects\\Inventory Management System\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\yeabiseraT\\Desktop\\Projects\\Inventory Management System\\Shared\\Shared.csproj"
               }
             }
           }

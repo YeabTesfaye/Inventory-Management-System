@@ -1,6 +1,7 @@
 using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Shared.RequestFeatures;
 
 namespace Repository;
 
@@ -16,7 +17,13 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 
     public async Task<Order?> GetOrderByIdAsync(Guid orderId, bool trackChanges)
     => await FindByCondition(o => o.OrderId == orderId, trackChanges).SingleOrDefaultAsync();
+    public async Task<IEnumerable<Order>> GetOrdersOfCustomerAsync(Guid customerId, OrderParameters orderParameters, bool trackChanges)
+    => await FindByCondition(o => o.CustomerId == customerId, trackChanges)
+            .OrderBy(o => o.OrderDate)
+            .Skip((orderParameters.PageNumber - 1) * orderParameters.PageSize)
+            .Take(orderParameters.PageSize)
+            .ToListAsync();
 
-    public async Task<IEnumerable<Order>> GetOrdersOfCustomerAsync(Guid customerId, bool trackChanges)
-    => await FindByCondition(o => o.CustomerId == customerId, trackChanges).OrderBy(o => o.OrderDate).ToListAsync();
+
 }
+

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -126,7 +126,7 @@ namespace api.Migrations
             migrationBuilder.InsertData(
                 table: "Order",
                 columns: new[] { "OrderId", "CustomerId", "OrderDate", "OrderStatus", "TotalAmount" },
-                values: new object[] { new Guid("b5a0a9ef-2e1e-4eb7-8e16-0402fa19e752"), new Guid("bdeebf00-75c8-4c7e-8b2e-b44e63e8f5e2"), new DateTime(2024, 8, 15, 10, 22, 47, 148, DateTimeKind.Local).AddTicks(9495), "Processing", 59.97m });
+                values: new object[] { new Guid("b5a0a9ef-2e1e-4eb7-8e16-0402fa19e752"), new Guid("bdeebf00-75c8-4c7e-8b2e-b44e63e8f5e2"), new DateTime(2024, 8, 16, 14, 11, 30, 809, DateTimeKind.Local).AddTicks(7373), "Processing", 59.97m });
 
             migrationBuilder.InsertData(
                 table: "Products",

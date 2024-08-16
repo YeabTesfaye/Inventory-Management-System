@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Presentation.Controllers;
 [Route("api/customers/{customerId}/orders")]
@@ -14,9 +15,9 @@ public class OrderController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
-    public async Task<IActionResult> GetOrdersOfCustomer([FromRoute] Guid customerId)
+    public async Task<IActionResult> GetOrdersOfCustomer([FromRoute] Guid customerId,[FromQuery] OrderParameters orderParameters)
     {
-        var orders = await _serviceManager.OrderService.GetOrdersOfCustomerAsync(customerId, trackChanges: false);
+        var orders = await _serviceManager.OrderService.GetOrdersOfCustomerAsync(customerId,orderParameters, trackChanges: false);
         return Ok(orders);
     }
     [HttpGet("{orderId:guid}")]

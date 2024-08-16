@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -43,9 +44,9 @@ public sealed class OrderService : IOrderService
         return orderDto;
     }
 
-    public async Task<IEnumerable<OrderDto>> GetOrdersOfCustomerAsync(Guid customerId, bool trackChanges)
+    public async Task<IEnumerable<OrderDto>> GetOrdersOfCustomerAsync(Guid customerId, OrderParameters orderParameters, bool trackChanges)
     {
-        var orders = await _repositoryManager.Order.GetOrdersOfCustomerAsync(customerId, trackChanges);
+        var orders = await _repositoryManager.Order.GetOrdersOfCustomerAsync(customerId, orderParameters, trackChanges);
         var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
         return ordersDto;
     }

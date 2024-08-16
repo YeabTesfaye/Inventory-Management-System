@@ -4,6 +4,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Service.Contracts;
 using Shared.DataTransferObjects;
+using Shared.RequestFeatures;
 
 namespace Service;
 
@@ -46,10 +47,10 @@ public sealed class ProductService : IProductService
     }
 
 
-    public async Task<IEnumerable<ProductDto>> GetProductsAsync(Guid supplierId, bool trackChanges)
+    public async Task<IEnumerable<ProductDto>> GetProductsAsync(Guid supplierId,ProductParameters productParameters, bool trackChanges)
     {
         await CheckIfSupplierExists(supplierId, trackChanges: false);
-        var products = await _repositoryManager.Product.GetProductsAsync(supplierId, trackChanges);
+        var products = await _repositoryManager.Product.GetProductsAsync(supplierId,productParameters, trackChanges);
         var producsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
         return producsDto;
     }
