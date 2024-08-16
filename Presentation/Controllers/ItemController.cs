@@ -34,6 +34,8 @@ public class ItemController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> CreateItem([FromRoute] Guid orderId, [FromBody] ItemForCreationDto item)
     {
         if (item == null)
@@ -50,6 +52,8 @@ public class ItemController : ControllerBase
         );
     }
     [HttpPut("{itemId:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> UpdateItem([FromBody] ItemForUpdateDto item,
    [FromRoute] Guid orderId, [FromRoute] Guid itemId)
     {

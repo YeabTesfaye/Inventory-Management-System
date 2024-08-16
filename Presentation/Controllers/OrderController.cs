@@ -27,6 +27,8 @@ public class OrderController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> CreateOrder([FromBody] OrderForCreationDto order, [FromRoute] Guid customerId)
     {
         if (order == null)
@@ -39,6 +41,8 @@ public class OrderController : ControllerBase
     }
 
     [HttpPut("{itemId:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> UpdateOrder([FromBody] OrderForUpdateDto order, [FromRoute] Guid customerId,
     [FromRoute] Guid itemId)
     {
@@ -49,7 +53,7 @@ public class OrderController : ControllerBase
         await _serviceManager.OrderService.UpdateOrder(customerId, itemId, order, trackChanges: true);
         return NoContent();
     }
-   
+
     [HttpDelete("{orderId:guid}")]
     public async Task<IActionResult> DeleteOrderByOrderId([FromRoute] Guid orderId)
     {

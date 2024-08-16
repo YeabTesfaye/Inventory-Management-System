@@ -31,6 +31,8 @@ public class SupplierController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> CreateSupplier([FromBody] SupplierForCreationDto supplier)
     {
         if (supplier == null)
@@ -50,6 +52,8 @@ public class SupplierController : ControllerBase
         return NoContent();
     }
     [HttpPut("{supplierId:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> UpdateSupplier([FromBody] SupplierForUpdateDto supplier, [FromRoute] Guid supplierId)
     {
         if (supplier is null)

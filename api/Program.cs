@@ -1,6 +1,7 @@
 using api.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Presentation;
 using Service;
 using Service.Contracts;
 
@@ -22,6 +23,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
+builder.Services.AddScoped<ValidationFilterAttribute>();
 
 
 var app = builder.Build();

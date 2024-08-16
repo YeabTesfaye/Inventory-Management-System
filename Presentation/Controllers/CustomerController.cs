@@ -20,6 +20,8 @@ public class CustomerController : ControllerBase
         return Ok(customer);
     }
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> CreateCustomer([FromBody] CustomerForCreationDto customer)
     {
         if (customer == null)
@@ -36,6 +38,8 @@ public class CustomerController : ControllerBase
         return NoContent();
     }
     [HttpPut("{id:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> UpdateCustomer([FromBody] CustomerForUpdateDto customer, [FromRoute] Guid id)
     {
         if (customer is null)

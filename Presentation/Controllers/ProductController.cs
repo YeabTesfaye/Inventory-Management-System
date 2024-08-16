@@ -27,6 +27,8 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
+
     public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto product, [FromRoute] Guid supplierId)
     {
 
