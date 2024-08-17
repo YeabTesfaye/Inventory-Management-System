@@ -17,7 +17,7 @@ public class ItemRepository : RepositoryBase<Item>, IItemRepository
         var items = await FindByCondition(i => i.OrderId == orderId, trackChanges)
             .FilterItems(itemParameters.Name, itemParameters.Description)
             .Search(itemParameters.SearchTerm)
-            .OrderBy(i => i.Name) // Or any other default ordering
+            .Sort(itemParameters.OrderBy)
             .ToListAsync();
 
         return PagedList<Item>

@@ -23,7 +23,7 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
         var orders = await FindByCondition(o => o.CustomerId == customerId, trackChanges)
             .FilterOrders(orderParameters.OrderStatus)
             .Search(orderParameters.SearchTerm)
-            .OrderBy(o => o.OrderDate) // Or any other default ordering
+            .Sort(orderParameters.OrderBy)
             .ToListAsync();
 
         return PagedList<Order>

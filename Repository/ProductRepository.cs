@@ -19,7 +19,7 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
         var products = await FindByCondition(p => p.SupplierId == supplierId, trackChanges)
             .FilterProducts(productParameters.Name, productParameters.Description)
             .Search(productParameters.SearchTerm)
-            .OrderBy(p => p.Name) // Or any other default ordering
+            .Sort(productParameters.OrderBy)
             .ToListAsync();
 
         return PagedList<Product>

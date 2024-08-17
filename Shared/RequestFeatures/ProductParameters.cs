@@ -6,5 +6,5 @@ public class ProductParameters : RequestParameters
     public string Description { get; set; } = string.Empty;
 
     public string SearchTerm { get; set; } = string.Empty;
-
+    public ProductParameters() => OrderBy = "Name";
 }

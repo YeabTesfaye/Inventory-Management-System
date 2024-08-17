@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "tiHPjsV2ivs=",
+  "dgSpecHash": "KwXUbi883GA=",
   "success": true,
   "projectFilePath": "C:\\Users\\yeabiseraT\\Desktop\\Projects\\Inventory Management System\\api\\api.csproj",
   "expectedPackageFiles": [
@@ -159,6 +159,7 @@
     "C:\\Users\\yeabiseraT\\.nuget\\packages\\system.io.filesystem.primitives\\4.3.0\\system.io.filesystem.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\yeabiseraT\\.nuget\\packages\\system.io.pipelines\\6.0.3\\system.io.pipelines.6.0.3.nupkg.sha512",
     "C:\\Users\\yeabiseraT\\.nuget\\packages\\system.linq\\4.3.0\\system.linq.4.3.0.nupkg.sha512",
+    "C:\\Users\\yeabiseraT\\.nuget\\packages\\system.linq.dynamic.core\\1.4.4\\system.linq.dynamic.core.1.4.4.nupkg.sha512",
     "C:\\Users\\yeabiseraT\\.nuget\\packages\\system.linq.expressions\\4.3.0\\system.linq.expressions.4.3.0.nupkg.sha512",
     "C:\\Users\\yeabiseraT\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\yeabiseraT\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",

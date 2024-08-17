@@ -18,6 +18,7 @@ public class SupplierRepository : RepositoryBase<Supplier>, ISupplierRepository
     public void DeleteSupplier(Supplier supplier)
         => Delete(supplier);
 
+    
 
     public async Task<Supplier?> GetSupplierByIdAsync(Guid supplierId, bool trackChanges)
         => await FindByCondition(s => s.SupplierId.Equals(supplierId), trackChanges).SingleOrDefaultAsync();
@@ -27,11 +28,10 @@ public class SupplierRepository : RepositoryBase<Supplier>, ISupplierRepository
         var suppliers = await FindByCondition(s => true, trackChanges)
             .FilterSuppliers(supplierParameters.CompanyName, supplierParameters.ContactName)
             .Search(supplierParameters.SearchTerm)
-            .OrderBy(s => s.CompanyName) // Or any other default ordering
+            .Sort(supplierParameters.OrderBy)
             .ToListAsync();
 
-        return PagedList<Supplier>
-            .ToPagedList(suppliers, supplierParameters.PageNumber, supplierParameters.PageSize);
+        return PagedList<Supplier>.ToPagedList(suppliers, supplierParameters.PageNumber, supplierParameters.PageSize);
     }
 
 }
