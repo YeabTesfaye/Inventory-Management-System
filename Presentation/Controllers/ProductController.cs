@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -17,8 +18,9 @@ public class ProductController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetProducts(Guid supplierId, [FromQuery] ProductParameters productParameters)
     {
-        var products = await _serviceManager.ProductService.GetProductsAsync(supplierId,productParameters, trackChanges: false);
-        return Ok(products);
+        var pagedResult = await _serviceManager.ProductService.GetProductsAsync(supplierId, productParameters, trackChanges: false);
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+        return Ok(pagedResult.products);
     }
     [HttpGet("{productId:guid}")]
 

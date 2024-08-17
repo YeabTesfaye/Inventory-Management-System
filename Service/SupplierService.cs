@@ -43,12 +43,12 @@ public class SupplierService : ISupplierService
         return supplierDto;
     }
 
-    public async Task<IEnumerable<SupplierDto>> GetSuppliersAsync(SupplierParameters supplierParameters, bool trackChanges)
+    public async Task<(IEnumerable<SupplierDto> suppliers, MetaData metaData)> GetSuppliersAsync(SupplierParameters supplierParameters, bool trackChanges)
     {
 
-        var suppliers = await _repositoryManager.Supplier.GetAllSuppliersAsync(supplierParameters,trackChanges);
-        var supplierDto = _mapper.Map<IEnumerable<SupplierDto>>(suppliers);
-        return supplierDto;
+        var suppliersWithMetaData = await _repositoryManager.Supplier.GetAllSuppliersAsync(supplierParameters, trackChanges);
+        var supplierDto = _mapper.Map<IEnumerable<SupplierDto>>(suppliersWithMetaData);
+        return (suppliers: supplierDto, metaData: suppliersWithMetaData.MetaData);
     }
 
     public async Task UpdateSupplierAsync(Guid supplierId, SupplierForUpdateDto supplier, bool trackChanges)
@@ -72,7 +72,7 @@ public class SupplierService : ISupplierService
 
     private async Task<Supplier> GetSupplierAndCheckIfItExists(Guid supplierId, bool trackChanges)
     {
-        var supplier = await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges:false)
+        var supplier = await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges)
          ?? throw new SupplierNotFoundException(supplierId);
         return supplier;
     }

@@ -11,12 +11,14 @@ public class ItemRepository : RepositoryBase<Item>, IItemRepository
     {
     }
 
-    public async Task<IEnumerable<Item>> GetItemsOfOrderAsync(Guid orderId, ItemParameters itemParameters, bool trackChanges)
-    => await FindByCondition(item => item.OrderId == orderId, trackChanges)
-        .OrderBy(item => item.Name)
-        .Skip((itemParameters.PageNumber - 1) * itemParameters.PageSize)
-        .Take(itemParameters.PageSize).
-        ToListAsync();
+    public async Task<PagedList<Item>> GetItemsOfOrderAsync(Guid orderId, ItemParameters itemParameters, bool trackChanges)
+    {
+        var items = await FindByCondition(item => item.OrderId == orderId, trackChanges)
+       .OrderBy(item => item.Name).
+       ToListAsync();
+        return PagedList<Item>
+            .ToPagedList(items, itemParameters.PageNumber, itemParameters.PageSize);
+    }
 
 
 
@@ -31,13 +33,11 @@ public class ItemRepository : RepositoryBase<Item>, IItemRepository
 
     public void DeleteItem(Item item) => Delete(item);
 
-    public async Task<Item?> GetItemByItemIdAsync(Guid itemId)
+    public async Task<Item?> GetItemByItemIdAsync(Guid itemId, bool trackChanges)
     {
         var item = await FindByCondition(item => item.ItemId == itemId, trackChanges: false)
         .SingleOrDefaultAsync();
         return item;
     }
-
-
 
 }

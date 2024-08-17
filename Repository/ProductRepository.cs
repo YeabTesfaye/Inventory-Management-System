@@ -12,13 +12,14 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
     {
     }
 
-    public async Task<IEnumerable<Product>> GetProductsAsync(Guid supplierId, ProductParameters productParameters, bool trackChanges)
+    public async Task<PagedList<Product>> GetProductsAsync(Guid supplierId, ProductParameters productParameters, bool trackChanges)
     {
-        return await FindByCondition(p => p.SupplierId == supplierId, trackChanges)
+        var products = await FindByCondition(p => p.SupplierId == supplierId, trackChanges)
             .OrderBy(p => p.Name)
-            .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
-            .Take(productParameters.PageSize)
             .ToListAsync();
+        return PagedList<Product>
+        .ToPagedList(products, productParameters.PageNumber, productParameters.PageSize);
+
     }
 
 

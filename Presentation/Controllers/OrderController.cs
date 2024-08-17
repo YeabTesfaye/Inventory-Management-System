@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using Service.Contracts;
@@ -15,10 +16,11 @@ public class OrderController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
-    public async Task<IActionResult> GetOrdersOfCustomer([FromRoute] Guid customerId,[FromQuery] OrderParameters orderParameters)
+    public async Task<IActionResult> GetOrdersOfCustomer([FromRoute] Guid customerId, [FromQuery] OrderParameters orderParameters)
     {
-        var orders = await _serviceManager.OrderService.GetOrdersOfCustomerAsync(customerId,orderParameters, trackChanges: false);
-        return Ok(orders);
+        var pagedResult = await _serviceManager.OrderService.GetOrdersOfCustomerAsync(customerId, orderParameters, trackChanges: false);
+        Response.Headers.Add("X-Pagination",JsonSerializer.Serialize(pagedResult.metaData));
+        return Ok(pagedResult.orders);
     }
     [HttpGet("{orderId:guid}")]
     public async Task<IActionResult> GetOrderById([FromRoute] Guid orderId, [FromRoute] Guid customerId)

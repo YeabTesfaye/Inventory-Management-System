@@ -17,12 +17,14 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
 
     public async Task<Order?> GetOrderByIdAsync(Guid orderId, bool trackChanges)
     => await FindByCondition(o => o.OrderId == orderId, trackChanges).SingleOrDefaultAsync();
-    public async Task<IEnumerable<Order>> GetOrdersOfCustomerAsync(Guid customerId, OrderParameters orderParameters, bool trackChanges)
-    => await FindByCondition(o => o.CustomerId == customerId, trackChanges)
-            .OrderBy(o => o.OrderDate)
-            .Skip((orderParameters.PageNumber - 1) * orderParameters.PageSize)
-            .Take(orderParameters.PageSize)
-            .ToListAsync();
+    public async Task<PagedList<Order>> GetOrdersOfCustomerAsync(Guid customerId, OrderParameters orderParameters, bool trackChanges)
+    {
+        var orders = await FindByCondition(o => o.CustomerId == customerId, trackChanges)
+             .OrderBy(o => o.OrderDate)
+             .ToListAsync();
+        return PagedList<Order>
+        .ToPagedList(orders, orderParameters.PageNumber, orderParameters.PageSize);
+    }
 
 
 }

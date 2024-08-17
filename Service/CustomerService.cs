@@ -44,8 +44,7 @@ public sealed class CustomerService : ICustomerService
     public async Task UpdateCustomerAsync(Guid id, CustomerForUpdateDto customer, bool trackChanges)
     {
         // Fetch the customer from the repository with tracking as specified
-        var customerEntity = await _repositoryManager.Customer.GetCustomerAsync(id, trackChanges)
-                             ?? throw new CustomerNotFoundException(id);
+        var customerEntity = await GetCustomerAndCheckIfItExists(id,trackChanges);
 
         // Map the DTO to the entity
         _mapper.Map(customer, customerEntity);

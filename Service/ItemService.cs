@@ -18,12 +18,13 @@ public sealed class ItemService : IItemService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ItemDto>> GetItemsOfOrderAsync(Guid orderId, ItemParameters itemParameters,bool trackChanges)
+    public async Task<(IEnumerable<ItemDto> items, MetaData metaData)> GetItemsOfOrderAsync(Guid orderId, ItemParameters itemParameters, bool trackChanges)
     {
-        var items =
-       await _repositoryManager.Item.GetItemsOfOrderAsync(orderId, itemParameters,trackChanges);
-        var itemsDto = _mapper.Map<IEnumerable<ItemDto>>(items);
-        return itemsDto;
+        await CheckIfOrderExists(orderId, trackChanges: false);
+        var itemsWithMetaData =
+       await _repositoryManager.Item.GetItemsOfOrderAsync(orderId, itemParameters, trackChanges);
+        var itemsDto = _mapper.Map<IEnumerable<ItemDto>>(itemsWithMetaData);
+        return (items: itemsDto, metaData: itemsWithMetaData.MetaData);
     }
 
 
@@ -39,7 +40,7 @@ public sealed class ItemService : IItemService
 
     public async Task<ItemDto> CreateItemAsync(Guid orderId, ItemForCreationDto item)
     {
-        await CheckIfOrderExists(orderId, trackChanges: false);
+        await CheckIfOrderExists(orderId, trackChanges: true);
         var itemEntity = _mapper.Map<Item>(item);
         _repositoryManager.Item.CreateItem(itemEntity);
         await _repositoryManager.SaveAsync();
@@ -52,29 +53,32 @@ public sealed class ItemService : IItemService
         throw new NotImplementedException();
     }
 
-    public async Task<ItemDto> GetItemByItemIdAsync(Guid itemId)
+    public async Task<ItemDto> GetItemByItemIdAsync(Guid itemId, bool trackChanges)
     {
-        var item = await _repositoryManager.Item.GetItemByItemIdAsync(itemId);
+        var item = await _repositoryManager.Item.GetItemByItemIdAsync(itemId, trackChanges);
         var itemToReturn = _mapper.Map<ItemDto>(item);
         return itemToReturn;
     }
 
     public async Task DeleteItemByItemIdAsync(Guid id)
     {
-        var item = await GetItemAndCheckIfItExists(id);
+        var item = await GetItemAndCheckIfItExists(id, trackChanges: true);
         _repositoryManager.Item.DeleteItem(item);
         await _repositoryManager.SaveAsync();
     }
 
-    public async Task UpdateItemAsync(Guid orderId, Guid itemId, ItemForUpdateDto item, bool trackChanges)
+    public async Task UpdateItemAsync(Guid orderId, Guid itemId, ItemForUpdateDto item
+    , bool orderTrackChanges, bool itemTrackChanges)
     {
         // Check if the order exists
-        await CheckIfOrderExists(orderId, trackChanges: false);
+        await CheckIfOrderExists(orderId, orderTrackChanges);
 
         // Retrieve the item and check if it exists
-        var itemEntity = await GetItemAndCheckIfItExists(itemId);
+        var itemEntity = await GetItemAndCheckIfItExists(itemId, itemTrackChanges);
+
 
         // Map the DTO to the entity
+
         _mapper.Map(item, itemEntity);
 
         // Save the changes to the database
@@ -82,9 +86,9 @@ public sealed class ItemService : IItemService
     }
 
 
-    private async Task<Item> GetItemAndCheckIfItExists(Guid id)
+    private async Task<Item> GetItemAndCheckIfItExists(Guid id, bool trackChanges)
     {
-        var item = _ = await _repositoryManager.Item.GetItemByItemIdAsync(id)
+        var item = _ = await _repositoryManager.Item.GetItemByItemIdAsync(id, trackChanges)
         ?? throw new ItemNotFoundException(id);
         return item;
     }
@@ -99,6 +103,6 @@ public sealed class ItemService : IItemService
         _ = await _repositoryManager.Product.GetProductAsync(productId, trackChanges)
         ?? throw new ProductNotFoundException(productId);
     }
-    
+
 
 }

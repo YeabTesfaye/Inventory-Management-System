@@ -16,13 +16,14 @@ public class SupplierRepository : RepositoryBase<Supplier>, ISupplierRepository
 
     public void DeleteSupplier(Supplier supplier)
         => Delete(supplier);
-
     public async Task<Supplier?> GetSupplierByIdAsync(Guid supplierId, bool trackChanges)
         => await FindByCondition(s => s.SupplierId.Equals(supplierId), trackChanges).SingleOrDefaultAsync();
 
-    public async Task<IEnumerable<Supplier>> GetAllSuppliersAsync(SupplierParameters supplierParameters, bool trackChanges)
-        => await FindByCondition(o => true, trackChanges)
-      .Skip((supplierParameters.PageNumber - 1) * supplierParameters.PageSize)
-      .Take(supplierParameters.PageSize)
-      .ToListAsync();
+    public async Task<PagedList<Supplier>> GetAllSuppliersAsync(SupplierParameters supplierParameters, bool trackChanges)
+    {
+        var suppliers = await FindByCondition(o => true, trackChanges)
+         .ToListAsync();
+        return PagedList<Supplier>
+                .ToPagedList(suppliers, supplierParameters.PageNumber, supplierParameters.PageSize);
+    }
 }

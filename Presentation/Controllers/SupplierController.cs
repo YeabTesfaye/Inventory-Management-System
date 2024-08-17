@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -19,8 +20,9 @@ public class SupplierController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetSuppliers([FromQuery] SupplierParameters supplierParameters)
     {
-        var suppliers = await _serviceManager.SupplierService.GetSuppliersAsync(supplierParameters,trackChanges: false);
-        return Ok(suppliers);
+        var pagedResult = await _serviceManager.SupplierService.GetSuppliersAsync(supplierParameters, trackChanges: false);
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
+        return Ok(pagedResult.suppliers);
     }
 
     [HttpGet("{id:guid}")]

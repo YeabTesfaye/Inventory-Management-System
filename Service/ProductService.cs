@@ -34,7 +34,7 @@ public sealed class ProductService : IProductService
 
         var product = await CheckIfProductExistsAndReturn(productId, trackChanges: false);
         _repositoryManager.Product.DeleteProduct(product);
-       await _repositoryManager.SaveAsync();
+        await _repositoryManager.SaveAsync();
     }
 
     public async Task<ProductDto?> GetProductAsync(Guid productId, Guid supplierId, bool trackChanges)
@@ -47,13 +47,14 @@ public sealed class ProductService : IProductService
     }
 
 
-    public async Task<IEnumerable<ProductDto>> GetProductsAsync(Guid supplierId,ProductParameters productParameters, bool trackChanges)
+    public async Task<(IEnumerable<ProductDto> products, MetaData metaData)> GetProductsAsync(Guid supplierId, ProductParameters productParameters, bool trackChanges)
     {
         await CheckIfSupplierExists(supplierId, trackChanges: false);
-        var products = await _repositoryManager.Product.GetProductsAsync(supplierId,productParameters, trackChanges);
-        var producsDto = _mapper.Map<IEnumerable<ProductDto>>(products);
-        return producsDto;
+        var productsWithMetaData = await _repositoryManager.Product.GetProductsAsync(supplierId, productParameters, trackChanges);
+        var producsDto = _mapper.Map<IEnumerable<ProductDto>>(productsWithMetaData);
+        return (products: producsDto, metaData: productsWithMetaData.MetaData);
     }
+
     private async Task CheckIfSupplierExists(Guid supplierId, bool trackChanges)
     {
         _ = await _repositoryManager.Supplier.GetSupplierByIdAsync(supplierId, trackChanges)

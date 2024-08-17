@@ -44,11 +44,13 @@ public sealed class OrderService : IOrderService
         return orderDto;
     }
 
-    public async Task<IEnumerable<OrderDto>> GetOrdersOfCustomerAsync(Guid customerId, OrderParameters orderParameters, bool trackChanges)
+    public async Task<(IEnumerable<OrderDto> orders, MetaData metaData)> GetOrdersOfCustomerAsync(Guid customerId, OrderParameters orderParameters, bool trackChanges)
     {
-        var orders = await _repositoryManager.Order.GetOrdersOfCustomerAsync(customerId, orderParameters, trackChanges);
-        var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
-        return ordersDto;
+        await CheckIfCustomerExists(customerId, trackChanges: false);
+        var ordersWithMetaDAta = await _repositoryManager
+        .Order.GetOrdersOfCustomerAsync(customerId, orderParameters, trackChanges);
+        var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(ordersWithMetaDAta);
+        return (orders: ordersDto, metaData: ordersWithMetaDAta.MetaData);
     }
 
     public async Task UpdateOrder(Guid customerId, Guid itemId, OrderForUpdateDto order, bool trackChanges)
