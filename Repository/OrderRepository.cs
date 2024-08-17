@@ -1,6 +1,7 @@
 using Contracts;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extensions;
 using Shared.RequestFeatures;
 
 namespace Repository;
@@ -19,17 +20,16 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
     => await FindByCondition(o => o.OrderId == orderId, trackChanges).SingleOrDefaultAsync();
     public async Task<PagedList<Order>> GetOrdersOfCustomerAsync(Guid customerId, OrderParameters orderParameters, bool trackChanges)
     {
-        // Apply filtering based on OrderStatus if it's not empty
-        var orders = await FindByCondition(o => o.CustomerId == customerId &&
-                                                (string.IsNullOrEmpty(orderParameters.OrderStatus) || o.OrderStatus.Contains(orderParameters.OrderStatus)),
-                                                trackChanges)
-            .OrderBy(o => o.OrderDate)  // Ensure orders are ordered by OrderDate
+        var orders = await FindByCondition(o => o.CustomerId == customerId, trackChanges)
+            .FilterOrders(orderParameters.OrderStatus)
+            .Search(orderParameters.SearchTerm)
+            .OrderBy(o => o.OrderDate) // Or any other default ordering
             .ToListAsync();
 
-        // Paginate the filtered results
         return PagedList<Order>
             .ToPagedList(orders, orderParameters.PageNumber, orderParameters.PageSize);
     }
+
 
 
 

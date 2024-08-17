@@ -2,6 +2,7 @@ using Contracts;
 using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extensions;
 using Shared.RequestFeatures;
 
 namespace Repository;
@@ -14,17 +15,17 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
 
     public async Task<PagedList<Product>> GetProductsAsync(Guid supplierId, ProductParameters productParameters, bool trackChanges)
     {
-        // Apply filtering based on Name if it's not empty
-        var products = await FindByCondition(p => p.SupplierId == supplierId &&
-                                                  (string.IsNullOrEmpty(productParameters.Name) || p.Name.Contains(productParameters.Name)),
-                                                  trackChanges)
-            .OrderBy(p => p.Name)  // Ensure products are ordered by Name
+        Console.WriteLine("Hello");
+        var products = await FindByCondition(p => p.SupplierId == supplierId, trackChanges)
+            .FilterProducts(productParameters.Name, productParameters.Description)
+            .Search(productParameters.SearchTerm)
+            .OrderBy(p => p.Name) // Or any other default ordering
             .ToListAsync();
 
-        // Paginate the filtered results
         return PagedList<Product>
             .ToPagedList(products, productParameters.PageNumber, productParameters.PageSize);
     }
+
 
 
 
