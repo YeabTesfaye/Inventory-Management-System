@@ -19,12 +19,18 @@ public class OrderRepository : RepositoryBase<Order>, IOrderRepository
     => await FindByCondition(o => o.OrderId == orderId, trackChanges).SingleOrDefaultAsync();
     public async Task<PagedList<Order>> GetOrdersOfCustomerAsync(Guid customerId, OrderParameters orderParameters, bool trackChanges)
     {
-        var orders = await FindByCondition(o => o.CustomerId == customerId, trackChanges)
-             .OrderBy(o => o.OrderDate)
-             .ToListAsync();
+        // Apply filtering based on OrderStatus if it's not empty
+        var orders = await FindByCondition(o => o.CustomerId == customerId &&
+                                                (string.IsNullOrEmpty(orderParameters.OrderStatus) || o.OrderStatus.Contains(orderParameters.OrderStatus)),
+                                                trackChanges)
+            .OrderBy(o => o.OrderDate)  // Ensure orders are ordered by OrderDate
+            .ToListAsync();
+
+        // Paginate the filtered results
         return PagedList<Order>
-        .ToPagedList(orders, orderParameters.PageNumber, orderParameters.PageSize);
+            .ToPagedList(orders, orderParameters.PageNumber, orderParameters.PageSize);
     }
+
 
 
 }

@@ -13,12 +13,26 @@ public class ItemRepository : RepositoryBase<Item>, IItemRepository
 
     public async Task<PagedList<Item>> GetItemsOfOrderAsync(Guid orderId, ItemParameters itemParameters, bool trackChanges)
     {
-        var items = await FindByCondition(item => item.OrderId == orderId, trackChanges)
-       .OrderBy(item => item.Name).
-       ToListAsync();
-        return PagedList<Item>
-            .ToPagedList(items, itemParameters.PageNumber, itemParameters.PageSize);
+        // Apply filtering based on Name and Description if they are not empty
+        var query = FindByCondition(item => item.OrderId == orderId &&
+                                            (string.IsNullOrEmpty(itemParameters.Name) || item.Name.Contains(itemParameters.Name)) &&
+                                            (string.IsNullOrEmpty(itemParameters.Description) || item.Description.Contains(itemParameters.Description)),
+                                            trackChanges);
+
+        // Apply ordering
+        query = query.OrderBy(item => item.Name);
+
+        // Apply pagination
+        var items = await query
+            .Skip((itemParameters.PageNumber - 1) * itemParameters.PageSize)
+            .Take(itemParameters.PageSize)
+            .ToListAsync();
+
+        // Return paginated result
+        return PagedList<Item>.ToPagedList(items, itemParameters.PageNumber, itemParameters.PageSize);
     }
+
+
 
 
 

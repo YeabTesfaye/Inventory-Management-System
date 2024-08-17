@@ -14,13 +14,18 @@ public class ProductRepository : RepositoryBase<Product>, IProductRepository
 
     public async Task<PagedList<Product>> GetProductsAsync(Guid supplierId, ProductParameters productParameters, bool trackChanges)
     {
-        var products = await FindByCondition(p => p.SupplierId == supplierId, trackChanges)
-            .OrderBy(p => p.Name)
+        // Apply filtering based on Name if it's not empty
+        var products = await FindByCondition(p => p.SupplierId == supplierId &&
+                                                  (string.IsNullOrEmpty(productParameters.Name) || p.Name.Contains(productParameters.Name)),
+                                                  trackChanges)
+            .OrderBy(p => p.Name)  // Ensure products are ordered by Name
             .ToListAsync();
-        return PagedList<Product>
-        .ToPagedList(products, productParameters.PageNumber, productParameters.PageSize);
 
+        // Paginate the filtered results
+        return PagedList<Product>
+            .ToPagedList(products, productParameters.PageNumber, productParameters.PageSize);
     }
+
 
 
     public async Task<Product?> GetProductAsync(Guid productId, bool trackChanges)
