@@ -27,7 +27,7 @@ builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
-
+builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
 
