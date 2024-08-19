@@ -53,14 +53,14 @@ public class SupplierController : ControllerBase
         return CreatedAtAction(nameof(GetSupplierById), new { id = createSupplier.SupplierId }, createSupplier);
     }
     [HttpDelete("{supplierId:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteSupplier([FromRoute] Guid supplierId)
     {
         await _serviceManager.SupplierService.DeleteSupplierAsync(supplierId, trackChanges: false);
         return NoContent();
     }
     [HttpPut("{supplierId:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Manager")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> UpdateSupplier([FromBody] SupplierForUpdateDto supplier, [FromRoute] Guid supplierId)

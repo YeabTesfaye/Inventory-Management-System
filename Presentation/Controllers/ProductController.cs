@@ -47,7 +47,7 @@ public class ProductController : ControllerBase
         return CreatedAtAction(nameof(GetProduct), new { productId = createProduct.ProductId, supplierId = product.SupplierId }, createProduct);
     }
     [HttpDelete("{productId:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
 
     public async Task<IActionResult> DeleteProduct([FromRoute] Guid productId, [FromRoute] Guid supplierId)
     {

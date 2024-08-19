@@ -21,7 +21,7 @@ public class OrderController : ControllerBase
     public async Task<IActionResult> GetOrdersOfCustomer([FromRoute] Guid customerId, [FromQuery] OrderParameters orderParameters)
     {
         var pagedResult = await _serviceManager.OrderService.GetOrdersOfCustomerAsync(customerId, orderParameters, trackChanges: false);
-        Response.Headers.Add("X-Pagination",JsonSerializer.Serialize(pagedResult.metaData));
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(pagedResult.metaData));
         return Ok(pagedResult.orders);
     }
     [HttpGet("{orderId:guid}")]
@@ -48,7 +48,8 @@ public class OrderController : ControllerBase
     }
 
     [HttpPut("{itemId:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Manager")]
+
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> UpdateOrder([FromBody] OrderForUpdateDto order, [FromRoute] Guid customerId,
@@ -63,6 +64,7 @@ public class OrderController : ControllerBase
     }
 
     [HttpDelete("{orderId:guid}")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteOrderByOrderId([FromRoute] Guid orderId)
     {
         await _serviceManager.OrderService.DeleteOrderAsync(orderId);

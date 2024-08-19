@@ -35,14 +35,16 @@ public class CustomerController : ControllerBase
         return CreatedAtAction(nameof(GetCustomer), new { productId = createCustomer.CustomerId, customerId = createCustomer.CustomerId }, createCustomer);
     }
     [HttpDelete("{id:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
+
     public async Task<IActionResult> DeleteCustomer([FromRoute] Guid id)
     {
         await _serviceManager.CustomerService.DeleteCustomerAsync(id, trackChanges: false);
         return NoContent();
     }
     [HttpPut("{id:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Manager")]
+
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> UpdateCustomer([FromBody] CustomerForUpdateDto customer, [FromRoute] Guid id)

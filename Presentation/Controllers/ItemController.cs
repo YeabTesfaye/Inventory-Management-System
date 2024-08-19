@@ -61,7 +61,7 @@ public class ItemController : ControllerBase
         );
     }
     [HttpPut("{itemId:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Manager")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateItem([FromRoute] Guid orderId,
     [FromRoute] Guid itemId, [FromBody] ItemForUpdateDto item
@@ -78,7 +78,7 @@ public class ItemController : ControllerBase
     }
 
     [HttpDelete("{itemId:guid}")]
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> DeleteItemByItemId([FromRoute] Guid itemId)
     {
 
