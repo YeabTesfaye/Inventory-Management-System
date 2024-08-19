@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -13,6 +14,7 @@ public class CustomerController : ControllerBase
      => _serviceManager = serviceManager;
 
     [HttpGet("{customerId:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetCustomer([FromRoute] Guid customerId)
     {
 
@@ -20,6 +22,7 @@ public class CustomerController : ControllerBase
         return Ok(customer);
     }
     [HttpPost]
+    [Authorize]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> CreateCustomer([FromBody] CustomerForCreationDto customer)
@@ -32,12 +35,14 @@ public class CustomerController : ControllerBase
         return CreatedAtAction(nameof(GetCustomer), new { productId = createCustomer.CustomerId, customerId = createCustomer.CustomerId }, createCustomer);
     }
     [HttpDelete("{id:guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteCustomer([FromRoute] Guid id)
     {
         await _serviceManager.CustomerService.DeleteCustomerAsync(id, trackChanges: false);
         return NoContent();
     }
     [HttpPut("{id:guid}")]
+    [Authorize]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> UpdateCustomer([FromBody] CustomerForUpdateDto customer, [FromRoute] Guid id)

@@ -35,6 +35,7 @@ public class MappingProfile : Profile
         CreateMap<ItemForUpdateDto, Item>()
             .ForMember(dest => dest.ItemId, opt => opt.Ignore());
         CreateMap<SupplierForUpdateDto, Supplier>();
+        CreateMap<UserForRegistrationDto, User>();
 
 
     }

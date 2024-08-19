@@ -24,6 +24,9 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     options.SuppressModelStateInvalidFilter = true;
 });
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
 
 
 var app = builder.Build();
@@ -35,6 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 else
+    app.UseExceptionHandler();
     app.UseHsts();
 app.ConfigureExceptionHandler();
 app.UseHttpsRedirection();
@@ -45,6 +49,8 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 

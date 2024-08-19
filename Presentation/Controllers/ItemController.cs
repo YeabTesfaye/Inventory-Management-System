@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -15,6 +16,7 @@ public class ItemController : ControllerBase
     public ItemController(IServiceManager service) => _service = service;
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetItemsOfOrder(Guid orderId, [FromQuery] ItemParameters itemParameters)
     {
         var pagedResult = await _service.ItemService.GetItemsOfOrderAsync(orderId, itemParameters, trackChanges: false);
@@ -23,6 +25,7 @@ public class ItemController : ControllerBase
         return Ok(pagedResult.items);
     }
     [HttpGet("{itemId:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetItemsByItemId([FromRoute] Guid itemId)
     {
 
@@ -31,6 +34,7 @@ public class ItemController : ControllerBase
     }
 
     [HttpGet("product/{productId:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetItemsByProductId([FromRoute] Guid orderId, [FromRoute] Guid productId)
     {
         var items = await _service.ItemService.GetItemsByProductIdAsync(orderId, productId);
@@ -38,6 +42,7 @@ public class ItemController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> CreateItem([FromRoute] Guid orderId, [FromBody] ItemForCreationDto item)
@@ -56,6 +61,7 @@ public class ItemController : ControllerBase
         );
     }
     [HttpPut("{itemId:guid}")]
+    [Authorize]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateItem([FromRoute] Guid orderId,
     [FromRoute] Guid itemId, [FromBody] ItemForUpdateDto item
@@ -72,6 +78,7 @@ public class ItemController : ControllerBase
     }
 
     [HttpDelete("{itemId:guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteItemByItemId([FromRoute] Guid itemId)
     {
 

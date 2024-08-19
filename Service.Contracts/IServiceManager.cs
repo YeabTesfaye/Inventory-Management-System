@@ -7,5 +7,6 @@ public interface IServiceManager
     IOrderService OrderService { get; }
     IProductService ProductService { get; }
     ISupplierService SupplierService { get; }
+    IAuthenticationService AuthenticationService { get; }
     
 }

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -16,6 +17,7 @@ public class ProductController : ControllerBase
         _serviceManager = serviceManager;
     }
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetProducts(Guid supplierId, [FromQuery] ProductParameters productParameters)
     {
         var pagedResult = await _serviceManager.ProductService.GetProductsAsync(supplierId, productParameters, trackChanges: false);
@@ -23,6 +25,7 @@ public class ProductController : ControllerBase
         return Ok(pagedResult.products);
     }
     [HttpGet("{productId:guid}")]
+    [Authorize]
 
     public async Task<IActionResult> GetProduct([FromRoute] Guid productId, [FromRoute] Guid supplierId)
     {
@@ -30,6 +33,7 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
     [HttpPost]
+    [Authorize]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> CreateProduct([FromBody] ProductForCreationDto product, [FromRoute] Guid supplierId)
@@ -43,6 +47,7 @@ public class ProductController : ControllerBase
         return CreatedAtAction(nameof(GetProduct), new { productId = createProduct.ProductId, supplierId = product.SupplierId }, createProduct);
     }
     [HttpDelete("{productId:guid}")]
+    [Authorize]
 
     public async Task<IActionResult> DeleteProduct([FromRoute] Guid productId, [FromRoute] Guid supplierId)
     {

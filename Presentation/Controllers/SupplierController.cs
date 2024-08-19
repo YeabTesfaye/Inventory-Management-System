@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.Contracts;
 using Shared.DataTransferObjects;
@@ -18,6 +19,7 @@ public class SupplierController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetSuppliers([FromQuery] SupplierParameters supplierParameters)
     {
         var pagedResult = await _serviceManager.SupplierService.GetSuppliersAsync(supplierParameters, trackChanges: false);
@@ -26,6 +28,7 @@ public class SupplierController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [Authorize]
     public async Task<IActionResult> GetSupplierById([FromRoute] Guid id)
     {
         var supplier = await _serviceManager.SupplierService.GetSupplierByIdAsync(id, trackChanges: false);
@@ -34,6 +37,7 @@ public class SupplierController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> CreateSupplier([FromBody] SupplierForCreationDto supplier)
@@ -49,12 +53,14 @@ public class SupplierController : ControllerBase
         return CreatedAtAction(nameof(GetSupplierById), new { id = createSupplier.SupplierId }, createSupplier);
     }
     [HttpDelete("{supplierId:guid}")]
+    [Authorize]
     public async Task<IActionResult> DeleteSupplier([FromRoute] Guid supplierId)
     {
         await _serviceManager.SupplierService.DeleteSupplierAsync(supplierId, trackChanges: false);
         return NoContent();
     }
     [HttpPut("{supplierId:guid}")]
+    [Authorize]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
 
     public async Task<IActionResult> UpdateSupplier([FromBody] SupplierForUpdateDto supplier, [FromRoute] Guid supplierId)
